@@ -29,8 +29,8 @@ Benchmarks: https://fastify.dev/benchmarks/
 ``` bash
 npm install @nestjs/platform-fastify
 ```
-:page_with_curl: main.ts
-``` js
+Edit file :page_with_curl: main.ts
+``` ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -48,8 +48,9 @@ bootstrap();
 ``` bash
 npm install --save @nestjs/swagger
 ```
-:page_with_curl: main.ts
-``` js
+
+Edit file :page_with_curl: main.ts
+``` ts
 // ...
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 

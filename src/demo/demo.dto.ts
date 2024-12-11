@@ -1,11 +1,11 @@
-export class CreateDemoUserDto {
+export class CreateDemoDto {
     email: string;
     password: string;
-    roles: UserRole[] = [];
+    roles: DemoRole[] = [];
     isEnabled?: boolean = true;
 }
 
-enum UserRole {
+enum DemoRole {
     Admin = 'Admin',
     Moderator = 'Moderator',
     User = 'User',

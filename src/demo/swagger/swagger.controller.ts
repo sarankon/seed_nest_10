@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Ip, Param, Post, Put, Query, Req, Request, Session } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiHeader, ApiParam, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateDemoUserDto } from '../dto/demo-user.dto';
+import { CreateDemoDto } from '../demo.dto';
 
 @ApiTags('Demo Swagger')
 @ApiHeader({name: 'Header', description: 'Custom Header',})
@@ -32,7 +32,7 @@ export class SwaggerController {
 
     @Post()
     async postSwagger() {
-        let newUser = new CreateDemoUserDto()
+        let newUser = new CreateDemoDto()
         newUser.email = 'Email'
         newUser.isEnabled = true
         newUser.password = '***'

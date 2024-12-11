@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { SwaggerController } from './swagger/swagger.controller';
-import { UsersModule } from './users/users.module';
+import { SampleModule } from './sample/sample.module';
 
 @Module({
   controllers: [SwaggerController],
-  imports: [UsersModule]
+  imports: [SampleModule]
 })
 export class DemoModule {}
