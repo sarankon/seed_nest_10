@@ -3,6 +3,7 @@ import { EntityManager, MikroORM } from '@mikro-orm/sqlite';
 import { Injectable } from '@nestjs/common';
 import { SampleSeeder } from 'src/config/seeds/sample';
 
+
 @Injectable()
 export class DatabaseService {
     constructor(
@@ -17,7 +18,7 @@ export class DatabaseService {
         // await this.mikro.discoverEntities()
         // await this.mikro.schema.dropSchema()
         // await this.mikro.schema.createSchema()
-        await this.mikro.schema.updateSchema({safe: true})
+        // await this.mikro.schema.updateSchema({safe: true})
         // await this.mikro.seeder.seed(SampleSeeder)
         console.info("Initial Database Successful :)")
     }

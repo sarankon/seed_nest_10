@@ -11,6 +11,7 @@ async function bootstrap() {
     .setTitle('Seed Nest 10 (Example)')
     .setDescription('Seed Nest API Description')
     .setVersion('1.0')
+    .addBasicAuth()
     .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
