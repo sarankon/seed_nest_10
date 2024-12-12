@@ -2,12 +2,12 @@
 Node Version 20
 
 ``` bash
-npm install -g @nestjs/cli@10
 npm install
 ```
 
 # Start
 ``` bash
+npm install -g @nestjs/cli@10
 npm run start:dev
 ```
 
