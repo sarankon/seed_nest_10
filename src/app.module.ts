@@ -1,17 +1,21 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DemoModule } from './demo/demo.module';
+import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+
+// Demo
+import { DemoModule } from './demo/demo.module'
 
 // Database
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { SqliteDriver } from '@mikro-orm/sqlite';
-import mikroConfig from './config/mikro-orm.config';
-import { DatabaseService } from './core/database/database.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs'
+import { SqliteDriver } from '@mikro-orm/sqlite'
+import { DatabaseService } from './core/database/database.service'
+import mikroConfig from './config/mikro-orm.config'
 
 // Security
-import { AuthModule } from './core/auth/auth.module';
-import { UsersModule } from './core/users/users.module';
+import { JwtModule } from '@nestjs/jwt'
+import { AuthModule } from './core/auth/auth.module'
+import { UsersModule } from './core/users/users.module'
+import { jwtConstants } from './config/jwt.config'
 
 
 @Module({
@@ -19,7 +23,7 @@ import { UsersModule } from './core/users/users.module';
         DemoModule,
         MikroOrmModule.forRoot(mikroConfig),
         AuthModule,
-        UsersModule,
+        UsersModule
     ],
     controllers: [AppController],
     providers: [

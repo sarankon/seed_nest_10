@@ -1,38 +1,35 @@
-import { Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiBasicAuth, ApiBody } from '@nestjs/swagger';
-import { UserLogin } from './core/users/user-login.dto';
-import { LocalAuthGuard } from './core/auth/local-auth.guard';
+import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
+import { ApiBearerAuth, ApiBody } from '@nestjs/swagger'
+import { AppService } from './app.service'
+import { UserLogin } from './core/users/user-login.dto'
+import { LocalAuthGuard } from './core/auth/local-auth.guard'
+import { AuthService } from './core/auth/auth.service'
+import { JwtAuthGuard } from './core/auth/jwt-auth.guard'
 
 
 @Controller()
 export class AppController {
   
     constructor(
-        private readonly appService: AppService
+        private readonly appService: AppService,
+        private authService: AuthService
     ) {}
-
 
     @UseGuards(LocalAuthGuard)
     @Post('auth/login')
-    @ApiBasicAuth()
     @ApiBody({type: UserLogin})
     async login(@Request() req) {
         console.log('Login User: ', req.user)
-        return req.user
+        return this.authService.login(req.user);
     }
 
-
-    @UseGuards(LocalAuthGuard)
-    @Post('auth/logout')
-    @ApiBasicAuth()
-    @ApiBody({type: UserLogin})
-    async logout(@Request() req) {
-        console.log('Logout User: ', req.user)
-        return req.logout();
+    @UseGuards(JwtAuthGuard)
+    @Get('profile')
+    @ApiBearerAuth()
+    getProfile(@Request() req) {
+        console.log('Profile User: ', req.user)
+        return req.user;
     }
-
 
     @Get()
     getHello(): string {

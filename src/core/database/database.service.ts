@@ -1,7 +1,7 @@
-// import { EntityManager, MikroORM } from '@mikro-orm/core';
-import { EntityManager, MikroORM } from '@mikro-orm/sqlite';
-import { Injectable } from '@nestjs/common';
-import { SampleSeeder } from 'src/config/seeds/sample';
+import { Injectable } from '@nestjs/common'
+// import { EntityManager, MikroORM } from '@mikro-orm/core'
+import { EntityManager, MikroORM } from '@mikro-orm/sqlite'
+import { SampleSeeder } from 'src/config/seeds/sample'
 
 
 @Injectable()
