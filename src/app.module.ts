@@ -7,7 +7,7 @@ import { DemoModule } from './demo/demo.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import mikroConfig from './config/mikro-orm.config';
-import { DatabaseService } from './core/database/database.service';
+import { DatabaseService } from './core/service/database.service';
 
 @Module({
   imports: [

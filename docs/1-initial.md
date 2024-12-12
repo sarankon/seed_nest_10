@@ -62,21 +62,21 @@ async function bootstrap() {
     .setTitle('Seed Nest 10 (Example)')
     .setDescription('Seed Nest API Description')
     .setVersion('1.0')
-    .addTag('Seed')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('swagger', app, documentFactory);
   
 
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
 ```
-Swagger UI: http://localhost:3000/api <br />
-Generate JSON: http://localhost:3000/api-json
+Swagger UI: http://localhost:3000/swagger <br />
+Generate JSON: http://localhost:3000/swagger-json
 
 :page_with_curl: main.ts
-``` js
+``` ts
 // HINT Change JSON Path 
 // http://localhost:3000/swagger/json
 SwaggerModule.setup('api', app, documentFactory, {

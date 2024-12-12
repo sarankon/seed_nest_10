@@ -16,6 +16,6 @@ export class Sample {
     password!: string;
  
     @Property({ type: TextType })
-    bio = '';
+    bio? = '';
     
 }

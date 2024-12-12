@@ -4,7 +4,7 @@ Reference: https://mikro-orm.io/docs/quick-start
 
 ## Install
 ``` bash
-npm install @mikro-orm/cli @mikro-orm/core @mikro-orm/nestjs @mikro-orm/reflection @mikro-orm/sqlite
+npm install @mikro-orm/cli @mikro-orm/core @mikro-orm/seeder @mikro-orm/reflection @mikro-orm/nestjs @mikro-orm/sqlite 
 ```
 
 ## Initial Config File
@@ -69,7 +69,7 @@ export class AppModule {}
 
 Add EntityManager
 ``` bash
-nest generate service core/database
+nest generate service core/service/database
 ```
 
 ## Schema Generator
@@ -80,7 +80,7 @@ npx mikro-orm schema:update --run --safe
 npx mikro-orm schema:drop --run
 
 # !WARNING! Drops the database schema and recreates it
-npx mikro-orm schema:fresh --run     
+npx mikro-orm schema:fresh --run --seed    
 
 # Dumps create schema SQL
 npx mikro-orm schema:create --dump
