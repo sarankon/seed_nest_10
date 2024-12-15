@@ -17,7 +17,7 @@ import { UploadController } from "./upload.controller"
             }),
             fileFilter: (request, file, callback) => {
                 console.log(file)
-                const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"]
+                const allowedMimeTypes = ["text/plain","image/jpeg", "image/png", "application/pdf"]
                 if (!allowedMimeTypes.includes(file.mimetype)) {
                     callback(null, false)
                 }

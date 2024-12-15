@@ -6,6 +6,7 @@ import { ApiBody, ApiConsumes, ApiProperty } from "@nestjs/swagger"
 import { UploadService } from "./upload.service"
 import { CreateUploadDto } from "./dto/create-upload.dto"
 import { UpdateUploadDto } from "./dto/update-upload.dto"
+import { FileExtender } from "./file-extender.interceptor"
 
 @Controller("upload")
 export class UploadController {
@@ -17,6 +18,7 @@ export class UploadController {
         schema: {
             type: "object",
             properties: {
+                comment: { type: "string"},
                 file: {
                     type: "string",
                     format: "binary",
@@ -36,8 +38,10 @@ export class UploadController {
     //         }),
     //     }),
     // )
+    @UseInterceptors(FileExtender)
     @UseInterceptors(FileInterceptor("file"))
     create(@UploadedFile() file: Express.Multer.File) {
+        console.log("file", file)
         return this.uploadService.create(file)
     }
 
