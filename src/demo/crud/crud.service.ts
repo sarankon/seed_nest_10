@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, NotFoundException } from "@nestjs/common"
 import { CreateCrudDto } from "./dto/create-crud.dto"
 import { UpdateCrudDto } from "./dto/update-crud.dto"
 
@@ -15,23 +15,23 @@ export class CrudService {
         crud.topic = createCrudDto.topic
         crud.detail = createCrudDto.detail
         await this.em.persist(crud).flush()
-        return new ResponseBody("200", crud)
+        return new ResponseBody(200, crud)
     }
 
     async findAll() {
         const list = await this.em.findAll(Crud)
         console.log(list)
-        return new ResponseBody("200", list)
+        return new ResponseBody(200, list)
     }
 
     async findOne(id: number) {
         try {
             const crud = await this.em.findOneOrFail(Crud, id)
-            return new ResponseBody("200", crud)
+            return new ResponseBody(200, crud)
         } catch (err) {
             console.error(err.name)
             console.error(err.message)
-            return new ResponseBody("404", null)
+            throw new NotFoundException(`Crud #id:${id} Not Found`)
         }
     }
 
@@ -43,11 +43,11 @@ export class CrudService {
                 detail: updateCrudDto.detail,
             })
             await this.em.flush()
-            return new ResponseBody("200", crud)
+            return new ResponseBody(200, crud)
         } catch (err) {
             console.error(err.name)
             console.error(err.message)
-            return new ResponseBody("404", null)
+            throw new NotFoundException(`Crud #id:${id} Not Found`)
         }
     }
 
@@ -56,11 +56,11 @@ export class CrudService {
             const crud = await this.em.findOneOrFail(Crud, id)
             this.em.remove(crud)
             await this.em.flush()
-            return new ResponseBody("200", crud)
+            return new ResponseBody(200, crud)
         } catch (err) {
             console.error(err.name)
             console.error(err.message)
-            return new ResponseBody("404", null)
+            throw new NotFoundException(`Crud #id:${id} Not Found`)
         }
     }
 }

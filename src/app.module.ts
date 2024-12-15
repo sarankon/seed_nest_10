@@ -16,6 +16,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { AuthModule } from './core/auth/auth.module'
 import { UsersModule } from './core/users/users.module'
 import { jwtConstants } from './config/jwt.config'
+import { UploadModule } from './base/upload/upload.module';
 
 
 @Module({
@@ -23,7 +24,8 @@ import { jwtConstants } from './config/jwt.config'
         DemoModule,
         MikroOrmModule.forRoot(mikroConfig),
         AuthModule,
-        UsersModule
+        UsersModule,
+        UploadModule
     ],
     controllers: [AppController],
     providers: [
