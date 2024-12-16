@@ -8,6 +8,13 @@
                 "semi": false,
                 "printWidth": 180
             }
+        },
+        {
+            "files": "main.ts",
+            "options": {
+                "semi": false,
+                "printWidth": 80
+            }
         }
     ]
 }
