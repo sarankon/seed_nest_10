@@ -1,7 +1,11 @@
 import { NestFactory } from "@nestjs/core"
 import { AppModule } from "./app/app.module"
 // import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger"
+import {
+    SwaggerModule,
+    DocumentBuilder,
+    SwaggerDocumentOptions,
+} from "@nestjs/swagger"
 import { NestExpressApplication } from "@nestjs/platform-express"
 import { join } from "path"
 
@@ -11,7 +15,7 @@ async function bootstrap() {
     // const app = await NestFactory.create<NestFastifyApplication>(AppModule);
 
     app.enableCors()
-    app.useStaticAssets(join(__dirname, '..', 'public'))
+    app.useStaticAssets(join(__dirname, "..", "public"))
 
     const config = new DocumentBuilder()
         .setTitle("Seed Nest 10 (Example)")
@@ -21,7 +25,11 @@ async function bootstrap() {
         .addBasicAuth()
         .addBearerAuth()
         .build()
-    const documentFactory = () => SwaggerModule.createDocument(app, config)
+    const options: SwaggerDocumentOptions = {
+        operationIdFactory: (controllerKey: string, methodKey: string) =>
+            methodKey + "_" + controllerKey.replace("Controller", "").toLowerCase(),
+    }
+    const documentFactory = () => SwaggerModule.createDocument(app, config, options)
     SwaggerModule.setup("swagger", app, documentFactory)
 
     await app.listen(process.env.PORT ?? 3000)
