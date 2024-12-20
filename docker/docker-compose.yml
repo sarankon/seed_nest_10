@@ -2,6 +2,17 @@
 name: seed
 services:
 
+  # service-api:
+  #   image: node:20
+  #   container_name: seed-service-api
+  #   restart: always
+  #   networks:
+  #     - seed
+  #   ports:
+  #     - 80:3000
+  #   volumes:
+  #     - ..\\dist:/home/seed
+
   mariadb-main:
     image: mariadb:10
     container_name: seed-database-main
@@ -55,6 +66,8 @@ services:
       - PMA_PASSWORD=password
 
 volumes:
+  volume_api:
+    name: seed-volume-api
   volume_main:
     name: seed-volume-main
   volume_second:
