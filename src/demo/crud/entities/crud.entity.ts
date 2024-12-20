@@ -1,13 +1,14 @@
-import { Entity, PrimaryKey, Property, TextType } from "@mikro-orm/core"
+import { Entity, PrimaryKey, Property } from "@mikro-orm/core"
+import { BaseEntity } from "src/base/entities/base.entity"
 
 @Entity()
-export class Crud {
-    @PrimaryKey({ type: "bigint" })
-    id!: number
+export class Crud extends BaseEntity {
+    // @PrimaryKey({ columnType: "int", autoincrement: true })
+    // id!: number
 
-    @Property({ columnType: "character varying(50)" })
+    @Property({ columnType: "character varying(255)" })
     topic!: string
 
-    @Property({ type: TextType })
+    @Property({ columnType: "text" })
     detail? = ""
 }

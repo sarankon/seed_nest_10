@@ -5,13 +5,18 @@ import { CreateUploadDto } from "./dto/create-upload.dto"
 import { UpdateUploadDto } from "./dto/update-upload.dto"
 
 import { EntityManager } from "@mikro-orm/core"
-import { ResponseBody } from "../dto/response-body.dto"
+import { InjectEntityManager } from "@mikro-orm/nestjs"
+import { ResponseBody } from "../response/response-body"
 import { Upload } from "./entities/upload.entity"
+
 
 
 @Injectable()
 export class UploadService {
-    constructor(private readonly em: EntityManager) {}
+    constructor(
+        // private readonly em: EntityManager
+        @InjectEntityManager("main") private readonly em: EntityManager
+    ) {}
 
     async create(file: Express.Multer.File) {
         // check empty value

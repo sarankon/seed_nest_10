@@ -1,16 +1,14 @@
-import { Entity, Property } from "@mikro-orm/core";
-import { CustomBaseEntity } from "src/base/entities/custom-base-entity.entity";
+import { Entity, Property } from "@mikro-orm/core"
+import { BaseEntity } from "src/base/entities/base.entity"
 
 @Entity()
-export class Upload extends CustomBaseEntity {
+export class Upload extends BaseEntity {
+    @Property({ columnType: "character varying(250)" })
+    originalFileName!: string
 
     @Property({ columnType: "character varying(250)" })
-    originalFileName!:string;
-
-    @Property({ columnType: "character varying(250)" })
-    filePath!:string
+    filePath!: string
 
     @Property({ columnType: "character varying(50)" })
-    type?:string = "none"
-    
+    type?: string = "none"
 }

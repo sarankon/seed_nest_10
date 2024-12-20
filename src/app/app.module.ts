@@ -7,25 +7,32 @@ import { DemoModule } from '../demo/demo.module'
 
 // Database
 import { MikroOrmModule } from '@mikro-orm/nestjs'
-import { SqliteDriver } from '@mikro-orm/sqlite'
 import { DatabaseService } from '../core/database/database.service'
 import mikroConfig from '../config/mikro-orm.config'
 
 // Security
 import { JwtModule } from '@nestjs/jwt'
+import { jwtConstants } from '../config/jwt.config'
+
 import { AuthModule } from '../core/auth/auth.module'
 import { UsersModule } from '../core/users/users.module'
-import { jwtConstants } from '../config/jwt.config'
 import { UploadModule } from '../base/upload/upload.module';
 
 
 @Module({
     imports: [
         DemoModule,
-        MikroOrmModule.forRoot(mikroConfig),
+        // For Single Database
+        // MikroOrmModule.forRoot(mikroConfig.sampleConfig),
+        // For Multiple Database
+        MikroOrmModule.forRoot(mikroConfig.mainConfig),
+        MikroOrmModule.forRoot(mikroConfig.secondConfig),
+        MikroOrmModule.forMiddleware(),
+        // Base Module
         AuthModule,
         UsersModule,
         UploadModule
+        // Project Module
     ],
     controllers: [AppController],
     providers: [

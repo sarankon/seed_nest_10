@@ -2,20 +2,24 @@ import { Injectable, NotFoundException } from "@nestjs/common"
 import { CreateCrudDto } from "./dto/create-crud.dto"
 import { UpdateCrudDto } from "./dto/update-crud.dto"
 
-import { EntityManager, wrap } from "@mikro-orm/core"
+import { EntityManager } from "@mikro-orm/core"
 import { Crud } from "./entities/crud.entity"
-import { ResponseBody } from "src/base/dto/response-body.dto"
+import { ResponseBody } from "src/base/response/response-body"
+import { InjectEntityManager } from "@mikro-orm/nestjs"
 
 @Injectable()
 export class CrudService {
-    constructor(private readonly em: EntityManager) {}
+    constructor(
+        // private readonly em: EntityManager
+        @InjectEntityManager("main") private readonly em: EntityManager
+    ) {}
 
-    async create(createCrudDto: CreateCrudDto) {
-        const crud: Crud = new Crud()
-        crud.topic = createCrudDto.topic
-        crud.detail = createCrudDto.detail
-        await this.em.persist(crud).flush()
-        return new ResponseBody(200, crud)
+    async create(createEntity: CreateCrudDto) {
+        const entity: Crud = new Crud()
+        entity.topic = createEntity.topic
+        entity.detail = createEntity.detail
+        await this.em.persist(entity).flush()
+        return new ResponseBody(200, entity)
     }
 
     async findAll() {
@@ -26,41 +30,38 @@ export class CrudService {
 
     async findOne(id: number) {
         try {
-            const crud = await this.em.findOneOrFail(Crud, id)
-            return new ResponseBody(200, crud)
+            const entity = await this.em.findOneOrFail(Crud, id)
+            return new ResponseBody(200, entity)
         } catch (err) {
             console.error(err.name)
             console.error(err.message)
-            throw new NotFoundException(`Crud #id:${id} Not Found`)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
         }
     }
 
-    async update(id: number, updateCrudDto: UpdateCrudDto) {
+    async update(id: number, updateEntity: UpdateCrudDto) {
         try {
-            const crud = await this.em.findOneOrFail(Crud, id)
-            wrap(crud).assign({
-                topic: updateCrudDto.topic,
-                detail: updateCrudDto.detail,
-            })
+            const entity = await this.em.findOneOrFail(Crud, id)
+            this.em.assign(entity, updateEntity, {mergeObjectProperties: true})
             await this.em.flush()
-            return new ResponseBody(200, crud)
+            return new ResponseBody(200, entity)
         } catch (err) {
             console.error(err.name)
             console.error(err.message)
-            throw new NotFoundException(`Crud #id:${id} Not Found`)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
         }
     }
 
     async remove(id: number) {
         try {
-            const crud = await this.em.findOneOrFail(Crud, id)
-            this.em.remove(crud)
+            const entity = await this.em.findOneOrFail(Crud, id)
+            this.em.remove(entity)
             await this.em.flush()
-            return new ResponseBody(200, crud)
+            return new ResponseBody(200, entity)
         } catch (err) {
             console.error(err.name)
             console.error(err.message)
-            throw new NotFoundException(`Crud #id:${id} Not Found`)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
         }
     }
 }

@@ -7,12 +7,12 @@ export class ResponseBody {
         this.statusCode = statusCode
         this.data = data
 
-        if(this.statusCode == 200) {
+        if (this.statusCode == 200) {
             this.message = Status.success
         }
     }
 }
 
 enum Status {
-    success = 'success',
+    success = "success",
 }
