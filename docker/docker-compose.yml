@@ -1,0 +1,66 @@
+#version: "3"
+name: seed
+services:
+
+  mariadb-main:
+    image: mariadb:10
+    container_name: seed-database-main
+    restart: always
+    networks:
+      - seed
+    ports:
+      - 3306:3306
+    volumes:
+      # - /home/lanmuang/database/main:/var/lib/mysql:Z
+      # - D:\\Docker\\Volumes\lanmuang\database\main:/var/lib/mysql:Z
+      - volume_main:/var/lib/mysql:Z
+    environment:
+      - MARIADB_DATABASE=seed
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_USER=seed
+      - MARIADB_PASSWORD=password
+
+  mariadb-second:
+    image: mariadb:10
+    container_name: seed-database-second
+    restart: always
+    networks:
+      - seed
+    ports:
+      - 33062:3306
+    volumes:
+      # - /home/lanmuang/database/second:/var/lib/mysql:Z
+      # - D:\\Docker\\Volumes\lanmuang\database\second:/var/lib/mysql:Z
+      - volume_second:/var/lib/mysql:Z
+    environment:
+      - MARIADB_DATABASE=seed
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_USER=seed
+      - MARIADB_PASSWORD=password
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: seed-phpmyadmin
+    restart: always
+    networks:
+      - seed
+    ports:
+      - 8082:80
+    environment:
+      - PMA_ARBITRARY=0
+      - PMA_VERBOSES=Main Database,Second Database
+      - PMA_HOSTS=seed-database-main,seed-database-second
+      - PMA_PORTS=3306,3306
+      - PMA_USER=seed
+      - PMA_PASSWORD=password
+
+volumes:
+  volume_main:
+    name: seed-volume-main
+  volume_second:
+    name: seed-volume-second
+
+networks:
+  seed:
+    name: seed-network-bridge
+    driver: bridge
