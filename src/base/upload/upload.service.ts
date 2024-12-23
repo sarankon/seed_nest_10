@@ -4,12 +4,12 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { EntityManager } from "@mikro-orm/core"
 import { InjectEntityManager } from "@mikro-orm/nestjs"
 
-import { ResponseBody } from "../response/response-body"
+import { ResponseBody } from "../response-body"
 
 import uploadConfig from "../../config/upload.config"
-import { Files } from "./entities/files.entity"
-import { Documents } from "./entities/documents.entity"
-import { Images } from "./entities/images.entity"
+import { UploadFiles } from "./entities/upload-files.entity"
+import { UploadDocuments } from "./entities/upload-documents.entity"
+import { UploadImages } from "./entities/upload-images.entity"
 
 @Injectable()
 export class UploadService {
@@ -49,7 +49,7 @@ export class UploadService {
 
         // return { message: "file uploaded successfully", file }
 
-        const upload = new Files()
+        const upload = new UploadFiles()
         upload.originalFileName = file.originalname
         upload.mimeTypes = file.mimetype
         upload.name = file.filename
@@ -62,7 +62,7 @@ export class UploadService {
 
     async findFile(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(Files, id)
+            const entity = await this.em.findOneOrFail(UploadFiles, id)
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error(err.name)
@@ -73,7 +73,7 @@ export class UploadService {
 
     async removeFile(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(Files, id)
+            const entity = await this.em.findOneOrFail(UploadFiles, id)
             this.em.remove(entity)
             await this.em.flush()
             return new ResponseBody(200, entity)
@@ -85,7 +85,7 @@ export class UploadService {
     }
 
     async findAllFile() {
-        const list = await this.em.findAll(Files)
+        const list = await this.em.findAll(UploadFiles)
         console.log(list)
         return new ResponseBody("200", list)
     }
@@ -99,7 +99,7 @@ export class UploadService {
             throw new BadRequestException("invalid file type! or file is too large!")
         }
 
-        const upload = new Documents()
+        const upload = new UploadDocuments()
         upload.originalFileName = file.originalname
         upload.mimeTypes = file.mimetype
         upload.name = file.filename
@@ -112,7 +112,7 @@ export class UploadService {
 
     async findDocument(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(Documents, id)
+            const entity = await this.em.findOneOrFail(UploadDocuments, id)
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error(err.name)
@@ -123,7 +123,7 @@ export class UploadService {
 
     async removeDocument(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(Documents, id)
+            const entity = await this.em.findOneOrFail(UploadDocuments, id)
             this.em.remove(entity)
             await this.em.flush()
             return new ResponseBody(200, entity)
@@ -135,7 +135,7 @@ export class UploadService {
     }
 
     async findAllDocument() {
-        const list = await this.em.findAll(Documents)
+        const list = await this.em.findAll(UploadDocuments)
         console.log(list)
         return new ResponseBody("200", list)
     }
@@ -149,7 +149,7 @@ export class UploadService {
             throw new BadRequestException("invalid file type! or file is too large!")
         }
 
-        const upload = new Images()
+        const upload = new UploadImages()
         upload.originalFileName = file.originalname
         upload.mimeTypes = file.mimetype
         upload.name = file.filename
@@ -162,7 +162,7 @@ export class UploadService {
 
     async findImage(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(Images, id)
+            const entity = await this.em.findOneOrFail(UploadImages, id)
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error(err.name)
@@ -173,7 +173,7 @@ export class UploadService {
 
     async removeImage(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(Images, id)
+            const entity = await this.em.findOneOrFail(UploadImages, id)
             this.em.remove(entity)
             await this.em.flush()
             return new ResponseBody(200, entity)
@@ -185,7 +185,7 @@ export class UploadService {
     }
 
     async findAllImage() {
-        const list = await this.em.findAll(Images)
+        const list = await this.em.findAll(UploadImages)
         console.log(list)
         return new ResponseBody("200", list)
     }

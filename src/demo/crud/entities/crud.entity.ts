@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core"
-import { BaseEntity } from "src/base/entities/base.entity"
+import { BaseEntity } from "src/base/base.entity"
 
 @Entity()
 export class Crud extends BaseEntity {

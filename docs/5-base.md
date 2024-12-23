@@ -1,3 +1,8 @@
+# Base Module
+``` bash
+nest generate module base
+```
+
 # Upload Service
 
 Reference: https://docs.nestjs.com/techniques/file-upload

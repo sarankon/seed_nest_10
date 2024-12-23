@@ -1,20 +1,24 @@
 import { Entity, Property } from "@mikro-orm/core"
-import { BaseEntity } from "src/base/entities/base.entity"
+import { BaseEntity } from "src/base/base.entity"
 
 @Entity()
-export class Files extends BaseEntity {
+export class User extends BaseEntity {
     @Property({ columnType: "character varying(250)" })
-    originalFileName!: string
+    username!: string
 
     @Property({ columnType: "character varying(250)" })
-    mimeTypes!: string
+    password!: string
+    
+    // Basic Profile
+    @Property({ columnType: "character varying(250)" })
+    firstName!: string
 
     @Property({ columnType: "character varying(250)" })
-    name!: string
+    lastName!: string
 
     @Property({ columnType: "character varying(250)" })
-    filePath!: string
+    email!: string
 
     @Property({ columnType: "character varying(250)" })
-    fileUrl!: string
+    phone!: string
 }

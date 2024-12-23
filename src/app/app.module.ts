@@ -17,6 +17,7 @@ import { jwtConstants } from '../config/jwt.config'
 import { AuthModule } from '../core/auth/auth.module'
 import { UsersModule } from '../core/users/users.module'
 import { UploadModule } from '../base/upload/upload.module';
+import { BaseModule } from 'src/base/base.module'
 
 
 @Module({
@@ -28,10 +29,11 @@ import { UploadModule } from '../base/upload/upload.module';
         MikroOrmModule.forRoot(mikroConfig.mainConfig),
         MikroOrmModule.forRoot(mikroConfig.secondConfig),
         MikroOrmModule.forMiddleware(),
-        // Base Module
+        // --- Base Module
         AuthModule,
         UsersModule,
-        UploadModule,
+        // UploadModule,
+        BaseModule,
         // Project Module
     ],
     controllers: [AppController],
