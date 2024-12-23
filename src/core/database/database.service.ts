@@ -30,7 +30,7 @@ export class DatabaseService {
         // await this.mikro.seeder.seed(SampleSeeder)
 
         // For Multiple Database
-        // await this.ormMain.schema.updateSchema({safe: true})
+        await this.ormMain.schema.updateSchema({safe: true})
 
         console.info("Initial Database Successful :)")
     }

@@ -20,7 +20,7 @@ services:
     networks:
       - seed
     ports:
-      - 3306:3306
+      - 13306:3306
     volumes:
       # - /home/lanmuang/database/main:/var/lib/mysql:Z
       # - D:\\Docker\\Volumes\lanmuang\database\main:/var/lib/mysql:Z
@@ -38,7 +38,7 @@ services:
     networks:
       - seed
     ports:
-      - 33062:3306
+      - 23306:3306
     volumes:
       # - /home/lanmuang/database/second:/var/lib/mysql:Z
       # - D:\\Docker\\Volumes\lanmuang\database\second:/var/lib/mysql:Z
@@ -56,7 +56,7 @@ services:
     networks:
       - seed
     ports:
-      - 8082:80
+      - 8080:80
     environment:
       - PMA_ARBITRARY=0
       - PMA_VERBOSES=Main Database,Second Database

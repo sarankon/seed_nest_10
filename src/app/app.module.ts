@@ -31,7 +31,7 @@ import { UploadModule } from '../base/upload/upload.module';
         // Base Module
         AuthModule,
         UsersModule,
-        UploadModule
+        UploadModule,
         // Project Module
     ],
     controllers: [AppController],

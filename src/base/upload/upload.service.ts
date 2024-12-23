@@ -1,24 +1,27 @@
 import { unlink } from "node:fs/promises"
 
-import { BadRequestException, Injectable } from "@nestjs/common"
-import { CreateUploadDto } from "./dto/create-upload.dto"
-import { UpdateUploadDto } from "./dto/update-upload.dto"
-
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { EntityManager } from "@mikro-orm/core"
 import { InjectEntityManager } from "@mikro-orm/nestjs"
+
 import { ResponseBody } from "../response/response-body"
-import { Upload } from "./entities/upload.entity"
 
-
+import uploadConfig from "../../config/upload.config"
+import { Files } from "./entities/files.entity"
+import { Documents } from "./entities/documents.entity"
+import { Images } from "./entities/images.entity"
 
 @Injectable()
 export class UploadService {
     constructor(
         // private readonly em: EntityManager
-        @InjectEntityManager("main") private readonly em: EntityManager
+        @InjectEntityManager("main") private readonly em: EntityManager,
     ) {}
 
-    async create(file: Express.Multer.File) {
+    // --- File
+    async uploadFile(file: Express.Multer.File) {
+        console.log(file)
+
         // check empty value
         if (!file) {
             // throw new BadRequestException("no file uploaded")
@@ -46,30 +49,144 @@ export class UploadService {
 
         // return { message: "file uploaded successfully", file }
 
-        console.log(file)
-        const upload = new Upload()
+        const upload = new Files()
         upload.originalFileName = file.originalname
+        upload.mimeTypes = file.mimetype
+        upload.name = file.filename
         upload.filePath = file.path
+        upload.fileUrl = uploadConfig.filesUrl + file.filename
         this.em.persist(upload)
         await this.em.flush()
         return new ResponseBody("200", upload)
     }
 
-    async findAll() {
-        const list = await this.em.findAll(Upload)
+    async findFile(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(Files, id)
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async removeFile(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(Files, id)
+            this.em.remove(entity)
+            await this.em.flush()
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async findAllFile() {
+        const list = await this.em.findAll(Files)
         console.log(list)
         return new ResponseBody("200", list)
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} upload`
+    // --- Document
+    async uploadDocument(file: Express.Multer.File) {
+        console.log(file)
+
+        // validate file
+        if (!file) {
+            throw new BadRequestException("invalid file type! or file is too large!")
+        }
+
+        const upload = new Documents()
+        upload.originalFileName = file.originalname
+        upload.mimeTypes = file.mimetype
+        upload.name = file.filename
+        upload.filePath = file.path
+        upload.fileUrl = uploadConfig.documentsUrl + file.filename
+        this.em.persist(upload)
+        await this.em.flush()
+        return new ResponseBody("200", upload)
     }
 
-    update(id: number, updateUploadDto: UpdateUploadDto) {
-        return `This action updates a #${id} upload`
+    async findDocument(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(Documents, id)
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} upload`
+    async removeDocument(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(Documents, id)
+            this.em.remove(entity)
+            await this.em.flush()
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async findAllDocument() {
+        const list = await this.em.findAll(Documents)
+        console.log(list)
+        return new ResponseBody("200", list)
+    }
+
+    // --- Image
+    async uploadImage(file: Express.Multer.File) {
+        console.log(file)
+
+        // validate file
+        if (!file) {
+            throw new BadRequestException("invalid file type! or file is too large!")
+        }
+
+        const upload = new Images()
+        upload.originalFileName = file.originalname
+        upload.mimeTypes = file.mimetype
+        upload.name = file.filename
+        upload.filePath = file.path
+        upload.fileUrl = uploadConfig.imagesUrl + file.filename
+        this.em.persist(upload)
+        await this.em.flush()
+        return new ResponseBody("200", upload)
+    }
+
+    async findImage(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(Images, id)
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async removeImage(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(Images, id)
+            this.em.remove(entity)
+            await this.em.flush()
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async findAllImage() {
+        const list = await this.em.findAll(Images)
+        console.log(list)
+        return new ResponseBody("200", list)
     }
 }

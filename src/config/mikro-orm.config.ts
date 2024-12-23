@@ -37,7 +37,7 @@ const contextMain: MikroOrmModuleSyncOptions = {
 
     driver: MariaDbDriver,
     host: "localhost",
-    port: 3306,
+    port: 13306,
     dbName: "seed",
     user: "seed",
     password: "password",
@@ -56,7 +56,7 @@ const contextSecond: MikroOrmModuleSyncOptions = {
 
     driver: MariaDbDriver,
     host: "localhost",
-    port: 33062,
+    port: 23306,
     dbName: "seed",
     user: "seed",
     password: "password",

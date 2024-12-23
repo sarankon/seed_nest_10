@@ -19,3 +19,8 @@ fsutil file createnew Empty-10MB.txt 10485760
 
 ## File Type
 Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types
+
+# User Service
+``` bash
+nest generate resource base/user
+```
