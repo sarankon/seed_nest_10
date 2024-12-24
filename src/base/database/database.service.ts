@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common'
-// import { EntityManager, MikroORM } from '@mikro-orm/core'
-import { EntityManager, MikroORM } from '@mikro-orm/sqlite'
-import { InjectEntityManager, InjectMikroORM } from '@mikro-orm/nestjs'
-// import { SampleSeeder } from 'src/config/seeds/sample'
+import { Injectable } from "@nestjs/common"
+import { EntityManager, MikroORM } from "@mikro-orm/core"
+import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
 
+// import { SampleSeeder } from 'src/config/seeds/sample'
 
 @Injectable()
 export class DatabaseService {
@@ -15,7 +14,7 @@ export class DatabaseService {
         // For Multiple Database
         @InjectMikroORM("main") private readonly ormMain: MikroORM,
         @InjectMikroORM("second") private readonly ormSecond: MikroORM,
-    ) { 
+    ) {
         this.initialDatabase()
     }
 
@@ -31,9 +30,8 @@ export class DatabaseService {
 
         // For Multiple Database
         // await this.ormMain.schema.dropSchema()
-        await this.ormMain.schema.updateSchema({safe: true})
+        await this.ormMain.schema.updateSchema({ safe: true })
 
         console.info("Initial Database Successful :)")
     }
-
 }

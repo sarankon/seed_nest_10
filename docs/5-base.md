@@ -3,6 +3,22 @@
 nest generate module base
 ```
 
+# User Service and Authen Service
+``` bash
+npm install uuid
+npm install bcrypt
+npm install --save-dev @types/bcrypt
+```
+
+``` bash
+nest generate resource base/user
+```
+
+``` bash
+nest generate service base/auth
+nest generate controller base/auth
+```
+
 # Upload Service
 
 Reference: https://docs.nestjs.com/techniques/file-upload
@@ -25,7 +41,3 @@ fsutil file createnew Empty-10MB.txt 10485760
 ## File Type
 Reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types
 
-# User Service
-``` bash
-nest generate resource base/user
-```

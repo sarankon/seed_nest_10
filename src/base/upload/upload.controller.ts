@@ -1,16 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from "@nestjs/common"
-import { ApiBody, ApiConsumes, ApiProperty } from "@nestjs/swagger"
+import { Controller, Get, Post, Param, Delete, UseInterceptors, UploadedFile } from "@nestjs/common"
+import { ApiBody, ApiConsumes } from "@nestjs/swagger"
 import { FileInterceptor } from "@nestjs/platform-express"
 import { diskStorage } from "multer"
 
-import uploadConfig from "../../config/upload.config"
 import { UploadService } from "./upload.service"
+import uploadConfig from "../../config/upload.config"
 
-@Controller()
+@Controller("upload")
 export class UploadController {
     constructor(private readonly uploadService: UploadService) {}
 
-    @Post("/upload/file")
+    @Post("file")
     @ApiConsumes("multipart/form-data")
     @ApiBody({
         schema: {
@@ -44,23 +44,23 @@ export class UploadController {
         return this.uploadService.uploadFile(file)
     }
 
-    @Get("/upload/file/:id")
+    @Get("file/:id")
     findFile(@Param("id") id: string) {
         return this.uploadService.findFile(+id)
     }
 
-    @Delete("/upload/file/:id")
+    @Delete("file/:id")
     removeFile(@Param("id") id: string) {
         return this.uploadService.removeFile(+id)
     }
 
-    @Get("/upload/file")
+    @Get("file")
     findAll() {
         return this.uploadService.findAllFile()
     }
 
     // --- Document
-    @Post("/upload/document")
+    @Post("document")
     @ApiConsumes("multipart/form-data")
     @ApiBody({
         schema: {
@@ -103,23 +103,23 @@ export class UploadController {
         return this.uploadService.uploadDocument(file)
     }
 
-    @Get("/upload/document/:id")
+    @Get("document/:id")
     findDocument(@Param("id") id: string) {
         return this.uploadService.findDocument(+id)
     }
 
-    @Delete("/upload/document/:id")
+    @Delete("document/:id")
     removeDocument(@Param("id") id: string) {
         return this.uploadService.removeDocument(+id)
     }
 
-    @Get("/upload/document")
+    @Get("document")
     findAllDocument() {
         return this.uploadService.findAllDocument()
     }
 
     // --- Image
-    @Post("/upload/image")
+    @Post("image")
     @ApiConsumes("multipart/form-data")
     @ApiBody({
         schema: {
@@ -162,17 +162,17 @@ export class UploadController {
         return this.uploadService.uploadImage(file)
     }
 
-    @Get("/upload/image/:id")
+    @Get("image/:id")
     findImage(@Param("id") id: string) {
         return this.uploadService.findImage(+id)
     }
 
-    @Delete("/upload/image/:id")
+    @Delete("image/:id")
     removeImage(@Param("id") id: string) {
         return this.uploadService.removeImage(+id)
     }
 
-    @Get("/upload/image")
+    @Get("image")
     findAllImage() {
         return this.uploadService.findAllImage()
     }
