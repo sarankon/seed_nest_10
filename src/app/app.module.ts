@@ -11,6 +11,8 @@ import { BaseModule } from "src/base/base.module"
 
 // Demo
 import { DemoModule } from "../demo/demo.module"
+import { APP_GUARD } from "@nestjs/core"
+import { RolesGuard } from "src/base/auth/role/roles.guard"
 
 @Module({
     imports: [
@@ -32,7 +34,7 @@ import { DemoModule } from "../demo/demo.module"
         AppController
     ],
     providers: [
-        AppService
+        AppService,
     ],
 })
 export class AppModule {}

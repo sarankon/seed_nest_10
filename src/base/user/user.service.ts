@@ -61,6 +61,9 @@ export class UserService {
 
     async findAll() {
         const list = await this.em.findAll(User)
+        list.forEach((data)=> {
+            data.password = "<hidden>"
+        })
         console.log(list)
         return new ResponseBody(200, list)
     }
@@ -79,6 +82,12 @@ export class UserService {
     async update(id: number, updateEntity: UpdateUserDto) {
         try {
             const entity = await this.em.findOneOrFail(User, { id: id })
+
+            if(updateEntity.password != "") {
+                const hashPassword = await this.hashPassword(updateEntity.password)
+                updateEntity.password = hashPassword
+            }
+
             this.em.assign(entity, updateEntity, { mergeObjectProperties: true })
             await this.em.flush()
             entity.password = "<hidden>"

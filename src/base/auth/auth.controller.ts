@@ -6,9 +6,13 @@ import { AuthService } from "./auth.service"
 import { LocalAuthGuard } from "./strategy/local-auth.guard"
 import { JwtAuthGuard } from "./strategy/jwt-auth.guard"
 
+import { Roles } from "./role/roles.decorator"
+import { Role } from "./role/role.enum"
+import { RolesGuard } from "./role/roles.guard"
+
 import { CreateUserDto } from "../user/dto/create-user.dto"
 import { UserLoginDto } from "./dto/login-user.dto"
-import { UserLogoutDto } from "./dto/logout-user.dto"
+// import { UserLogoutDto } from "./dto/logout-user.dto"
 
 @Controller("auth")
 export class AuthController {
@@ -34,7 +38,8 @@ export class AuthController {
     @Post("logout")
     @ApiBearerAuth()
     logout(@Request() request) {
-        console.log("User Logout: ", request)
+        console.log("User Logout: ", request.user)
+        return request.user
     }
 
     @UseGuards(JwtAuthGuard)
@@ -42,6 +47,15 @@ export class AuthController {
     @ApiBearerAuth()
     getProfile(@Request() request) {
         console.log("Profile User: ", request.user)
+        return request.user
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("admin")
+    @Roles(Role.Admin)
+    @ApiBearerAuth()
+    getAdmin(@Request() request) {
+        console.log("Role Admin: ", request.user)
         return request.user
     }
 }

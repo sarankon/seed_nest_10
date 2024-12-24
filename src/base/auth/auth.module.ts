@@ -10,17 +10,19 @@ import { LocalStrategy } from './strategy/local.strategy'
 
 // JWT (Javascript Web Token)
 import { JwtModule } from '@nestjs/jwt'
-import { jwtConstants } from 'src/config/jwt.config'
+import jwtConfig from 'src/config/jwt.config'
 import { JwtStrategy } from './strategy/jwt.strategy'
 import { UserService } from '../user/user.service';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './role/roles.guard';
 
 
 @Module({
     imports: [
         PassportModule,
         JwtModule.register({
-            secret: jwtConstants.secret,
-            signOptions: { expiresIn: '120s' },
+            secret: jwtConfig.secret,
+            // signOptions: { expiresIn: '120s' },
         }),
     ],
     controllers: [
@@ -31,6 +33,10 @@ import { UserService } from '../user/user.service';
         AuthService, 
         LocalStrategy,
         JwtStrategy,
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard
+        }
     ],
     exports: []
 })
