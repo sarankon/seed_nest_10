@@ -60,7 +60,13 @@ export class UploadService {
         return new ResponseBody("200", upload)
     }
 
-    async findFile(id: number) {
+    async findAllFile() {
+        const list = await this.em.findAll(UploadFiles)
+        console.log(list)
+        return new ResponseBody("200", list)
+    }
+
+    async findOneFile(id: number) {
         try {
             const entity = await this.em.findOneOrFail(UploadFiles, id)
             return new ResponseBody(200, entity)
@@ -84,12 +90,6 @@ export class UploadService {
         }
     }
 
-    async findAllFile() {
-        const list = await this.em.findAll(UploadFiles)
-        console.log(list)
-        return new ResponseBody("200", list)
-    }
-
     // --- Document
     async uploadDocument(file: Express.Multer.File) {
         console.log(file)
@@ -110,7 +110,13 @@ export class UploadService {
         return new ResponseBody("200", upload)
     }
 
-    async findDocument(id: number) {
+    async findAllDocument() {
+        const list = await this.em.findAll(UploadDocuments)
+        console.log(list)
+        return new ResponseBody("200", list)
+    }
+
+    async findOneDocument(id: number) {
         try {
             const entity = await this.em.findOneOrFail(UploadDocuments, id)
             return new ResponseBody(200, entity)
@@ -134,12 +140,6 @@ export class UploadService {
         }
     }
 
-    async findAllDocument() {
-        const list = await this.em.findAll(UploadDocuments)
-        console.log(list)
-        return new ResponseBody("200", list)
-    }
-
     // --- Image
     async uploadImage(file: Express.Multer.File) {
         console.log(file)
@@ -160,7 +160,13 @@ export class UploadService {
         return new ResponseBody("200", upload)
     }
 
-    async findImage(id: number) {
+    async findAllImage() {
+        const list = await this.em.findAll(UploadImages)
+        console.log(list)
+        return new ResponseBody("200", list)
+    }
+
+    async findOneImage(id: number) {
         try {
             const entity = await this.em.findOneOrFail(UploadImages, id)
             return new ResponseBody(200, entity)
@@ -182,11 +188,5 @@ export class UploadService {
             console.error(err.message)
             throw new NotFoundException(`Data #id:${id} Not Found`)
         }
-    }
-
-    async findAllImage() {
-        const list = await this.em.findAll(UploadImages)
-        console.log(list)
-        return new ResponseBody("200", list)
     }
 }

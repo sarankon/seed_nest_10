@@ -26,8 +26,18 @@ async function bootstrap() {
         .addBearerAuth()
         .build()
     const options: SwaggerDocumentOptions = {
-        operationIdFactory: (controllerKey: string, methodKey: string) =>
-            methodKey + "_" + controllerKey.replace("Controller", "").toLowerCase(),
+        operationIdFactory: (controllerKey: string, methodKey: string) => {
+            const controllerName = controllerKey.replace("Controller", "").toLowerCase()
+            switch(controllerName) {
+                case 'auth' :
+                    // return controllerName + "_" + methodKey
+                    return methodKey
+                case 'upload':
+                    return methodKey
+                default:
+                    return methodKey + "_" + controllerName
+            }
+        }
     }
     const documentFactory = () => SwaggerModule.createDocument(app, config, options)
     SwaggerModule.setup("swagger", app, documentFactory)

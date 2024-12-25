@@ -28,6 +28,13 @@ npm i --save-dev @types/multer
 
 ``` bash
 nest generate resource base/upload
+
+# nest generate module base/upload/file
+# nest generate controller base/upload/file
+# nest generate module base/upload/document
+# nest generate controller base/upload/document
+# nest generate module base/upload/image
+# nest generate controller base/upload/document
 ```
 
 ## Create File For Test

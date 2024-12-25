@@ -45,18 +45,18 @@ export class UploadController {
     }
 
     @Get("file/:id")
-    findFile(@Param("id") id: string) {
-        return this.uploadService.findFile(+id)
+    findOneFile(@Param("id") id: string) {
+        return this.uploadService.findOneFile(+id)
+    }
+
+    @Get("file")
+    findAllFile() {
+        return this.uploadService.findAllFile()
     }
 
     @Delete("file/:id")
     removeFile(@Param("id") id: string) {
         return this.uploadService.removeFile(+id)
-    }
-
-    @Get("file")
-    findAll() {
-        return this.uploadService.findAllFile()
     }
 
     // --- Document
@@ -104,18 +104,18 @@ export class UploadController {
     }
 
     @Get("document/:id")
-    findDocument(@Param("id") id: string) {
-        return this.uploadService.findDocument(+id)
-    }
-
-    @Delete("document/:id")
-    removeDocument(@Param("id") id: string) {
-        return this.uploadService.removeDocument(+id)
+    findOneDocument(@Param("id") id: string) {
+        return this.uploadService.findOneDocument(+id)
     }
 
     @Get("document")
     findAllDocument() {
         return this.uploadService.findAllDocument()
+    }
+
+    @Delete("document/:id")
+    removeDocument(@Param("id") id: string) {
+        return this.uploadService.removeDocument(+id)
     }
 
     // --- Image
@@ -163,17 +163,18 @@ export class UploadController {
     }
 
     @Get("image/:id")
-    findImage(@Param("id") id: string) {
-        return this.uploadService.findImage(+id)
-    }
-
-    @Delete("image/:id")
-    removeImage(@Param("id") id: string) {
-        return this.uploadService.removeImage(+id)
+    findOneImage(@Param("id") id: string) {
+        return this.uploadService.findOneImage(+id)
     }
 
     @Get("image")
     findAllImage() {
         return this.uploadService.findAllImage()
     }
+
+    @Delete("image/:id")
+    removeImage(@Param("id") id: string) {
+        return this.uploadService.removeImage(+id)
+    }
+    
 }

@@ -1,5 +1,5 @@
 import { Controller, Post, UseGuards, Request, Get, Body } from "@nestjs/common"
-import { ApiBearerAuth, ApiBody } from "@nestjs/swagger"
+import { ApiBearerAuth, ApiBody, ApiOperation } from "@nestjs/swagger"
 
 import { UserService } from "../user/user.service"
 import { AuthService } from "./auth.service"
@@ -45,7 +45,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Get("info")
     @ApiBearerAuth()
-    getProfile(@Request() request) {
+    infoUser(@Request() request) {
         console.log("Profile User: ", request.user)
         return request.user
     }
@@ -54,7 +54,7 @@ export class AuthController {
     @Get("admin")
     @Roles(Role.Admin)
     @ApiBearerAuth()
-    getAdmin(@Request() request) {
+    infoAdmin(@Request() request) {
         console.log("Role Admin: ", request.user)
         return request.user
     }
