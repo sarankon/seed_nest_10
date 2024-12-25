@@ -23,6 +23,6 @@ export class User extends BaseEntity {
     @Property({ columnType: "character varying(250)", unique: "email" })
     email!: string
 
-    @Property({ columnType: "character varying(250)" })
-    phone!: string
+    @Property({ columnType: "character varying(250)", nullable: true })
+    phone?: string
 }
