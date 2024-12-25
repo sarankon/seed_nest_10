@@ -40,7 +40,7 @@ export class AuthService {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            roles: [Role.User, Role.Admin]
+            roles: [Role.User]
         }
 
         return {

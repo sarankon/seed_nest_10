@@ -1,5 +1,5 @@
 import { Reflector } from "@nestjs/core"
-import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common"
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 
 import { Role } from "./role.enum"
@@ -29,20 +29,16 @@ export class RolesGuard implements CanActivate {
         }
 
         const request = context.switchToHttp().getRequest()
-        const header = request.header('Authorization');
-        console.log("header: ", header)
+        const authorization = request.header('Authorization');
+        console.log("authorization: ", authorization)
+        if(!authorization) {
+            throw new UnauthorizedException('Authorization: Bearer <token> header missing')
+        }
 
-        // Used JwtGuard
-        // if (!header) {
-        //     throw new HttpException('Authorization: Bearer <token> header missing', HttpStatus.UNAUTHORIZED);
-        // }
-
-        const parts = header.split(' ');
-
-        // Used JwtGuard
-        // if (parts.length !== 2 || parts[0] !== 'Bearer') {
-        //     throw new HttpException('Authorization: Bearer <token> header invalid', HttpStatus.UNAUTHORIZED);
-        // }
+        const parts = authorization.split(' ');
+        if (parts.length !== 2 || parts[0] !== 'Bearer') {
+            throw new UnauthorizedException('Authorization: Bearer <token> header missing')
+        }
 
         const token = parts[1];
         const user = this.jwtService.decode(token)
