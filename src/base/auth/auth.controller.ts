@@ -8,7 +8,6 @@ import { JwtAuthGuard } from "./strategy/jwt-auth.guard"
 
 import { Roles } from "./role/roles.decorator"
 import { Role } from "./role/role.enum"
-import { RolesGuard } from "./role/roles.guard"
 
 import { CreateUserDto } from "../user/dto/create-user.dto"
 import { UserLoginDto } from "./dto/login-user.dto"
@@ -39,7 +38,15 @@ export class AuthController {
     @ApiBearerAuth()
     logout(@Request() request) {
         console.log("User Logout: ", request.user)
-        return request.user
+        return this.authService.logout()
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post("refreshToken")
+    @ApiBearerAuth()
+    rotateToken(@Request() request) {
+        console.log("User Rotate: ")
+        return this.authService.refreshToken()
     }
 
     @UseGuards(JwtAuthGuard)

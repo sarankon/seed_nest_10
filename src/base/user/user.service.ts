@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { EntityManager, UuidType } from "@mikro-orm/core"
 import { InjectEntityManager } from "@mikro-orm/nestjs"
 
-import { User } from "./entities/user.entity"
+import { _User } from "./entities/user.entity"
 
 // Basic Service
 import { CreateUserDto } from "./dto/create-user.dto"
@@ -37,7 +37,7 @@ export class UserService {
         })
 
         try {
-            const entity: User = new User()
+            const entity: _User = new _User()
             entity.uuid = uuidv4()
             entity.username = createUserDto.username
             entity.password = hashPassword
@@ -60,7 +60,7 @@ export class UserService {
     }
 
     async findAll() {
-        const list = await this.em.findAll(User)
+        const list = await this.em.findAll(_User)
         list.forEach((data)=> {
             data.password = "<hidden>"
         })
@@ -70,7 +70,7 @@ export class UserService {
 
     async findOne(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(User, { id: id })
+            const entity = await this.em.findOneOrFail(_User, { id: id })
             entity.password = "<hidden>"
             return new ResponseBody(200, entity)
         } catch (err) {
@@ -81,7 +81,7 @@ export class UserService {
 
     async update(id: number, updateEntity: UpdateUserDto) {
         try {
-            const entity = await this.em.findOneOrFail(User, { id: id })
+            const entity = await this.em.findOneOrFail(_User, { id: id })
 
             if(updateEntity.password != "") {
                 const hashPassword = await this.hashPassword(updateEntity.password)
@@ -100,7 +100,7 @@ export class UserService {
 
     async remove(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(User, { id: id })
+            const entity = await this.em.findOneOrFail(_User, { id: id })
             this.em.remove(entity)
             await this.em.flush()
             entity.password = "<hidden>"
@@ -114,7 +114,7 @@ export class UserService {
     // Authen Service
     async findByUsername(username: string) {
         try {
-            const entity = await this.em.findOneOrFail(User, { username: username })
+            const entity = await this.em.findOneOrFail(_User, { username: username })
             return entity
         } catch (err) {
             console.error("Error:", err)

@@ -2,7 +2,7 @@ import { Entity, Property } from "@mikro-orm/core"
 import { BaseEntity } from "src/base/base.entity"
 
 @Entity()
-export class UploadImages extends BaseEntity {
+export class _UploadImages extends BaseEntity {
     @Property({ columnType: "character varying(250)" })
     originalFileName!: string
 

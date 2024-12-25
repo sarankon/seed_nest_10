@@ -5,6 +5,7 @@ import jwtConfig from "../../config/jwt.config"
 import { UserService } from "../user/user.service"
 import { UserDto } from "./dto/user.dto"
 import { Role } from "./role/role.enum"
+import { ResponseBody } from "../response-body"
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
             console.log("isMatch: ", isMatch)
 
             // If Match -> @Request
-            if(isMatch) {
+            if (isMatch) {
                 return user
             } else {
                 return null
@@ -29,7 +30,6 @@ export class AuthService {
         } else {
             return null
         }
-
     }
 
     // JWT Functionality
@@ -40,17 +40,28 @@ export class AuthService {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            roles: [Role.User]
+            roles: [Role.User],
         }
 
-        return {
+        const data = {
             access_token: this.jwtService.sign(payload, {
-                expiresIn: jwtConfig.expiresIn
+                expiresIn: jwtConfig.expiresIn,
             }),
+            refresh_token: ''
         }
+        return new ResponseBody(200, data)
     }
 
-    async logout() {}
+    async logout() {
+        // Revoke Access Token and Refresh Token
+        return "Logout"
+    }
 
-    async register() {}
+    async refreshToken() {
+        // Rotate Token
+        return "Rotate"
+    }
+
+    // Used UserService CreateUser
+    // async register() {}
 }
