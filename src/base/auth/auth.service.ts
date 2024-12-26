@@ -57,6 +57,12 @@ export class AuthService {
         return "Logout"
     }
 
+    async isAuthenticated() {
+        return new ResponseBody(200, {
+            isAuthenticated: true
+        })
+    }
+
     async refreshToken() {
         // Rotate Token
         return "Rotate"

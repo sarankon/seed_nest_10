@@ -42,10 +42,18 @@ export class AuthController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Post("isAuthenticated")
+    @ApiBearerAuth()
+    isAuthenticated(@Request() request) {
+        console.log("User is Authenticated")
+        return this.authService.isAuthenticated()
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post("refreshToken")
     @ApiBearerAuth()
-    rotateToken(@Request() request) {
-        console.log("User Rotate: ")
+    refreshToken(@Request() request) {
+        console.log("User Rotate Token: ")
         return this.authService.refreshToken()
     }
 
