@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Param, Delete, UseInterceptors, UploadedFile } from "@nestjs/common"
-import { ConfigService } from "@nestjs/config"
 import { ApiBody, ApiConsumes } from "@nestjs/swagger"
 import { FileInterceptor } from "@nestjs/platform-express"
 import { diskStorage } from "multer"
@@ -10,7 +9,6 @@ import uploadConfig from "../../config/upload.config"
 @Controller("upload")
 export class UploadController {
     constructor(
-        private readonly configService: ConfigService,
         private readonly uploadService: UploadService
     ) {}
 
@@ -55,7 +53,6 @@ export class UploadController {
 
     @Get("file")
     findAllFile() {
-        console.log("File", this.configService.get<string>('URL_HOST'))
         return this.uploadService.findAllFile()
     }
 
