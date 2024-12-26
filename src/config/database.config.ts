@@ -4,7 +4,7 @@ import { MikroOrmModuleSyncOptions } from "@mikro-orm/nestjs"
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection"
 import { SqliteDriver } from "@mikro-orm/sqlite"
 
-const mikroSampleConfig: Options = {
+const sampleConfig: Options = {
     // for simplicity, we use the SQLite database, as it's available pretty much everywhere
     driver: SqliteDriver,
     dbName: "./db/mikro.sqlite",
@@ -69,10 +69,10 @@ const contextSecond: MikroOrmModuleSyncOptions = {
     debug: true,
 }
 
-const mikroConfig = {
-    sampleConfig: mikroSampleConfig,
+const databaseConfig = {
+    sampleConfig: sampleConfig,
     mainConfig: contextMain,
     secondConfig: contextSecond,
 }
 
-export default mikroConfig
+export default databaseConfig

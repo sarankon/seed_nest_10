@@ -83,3 +83,7 @@ SwaggerModule.setup('api', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
 });
 ```
+
+``` bash
+npm install --save @nestjs/config
+```

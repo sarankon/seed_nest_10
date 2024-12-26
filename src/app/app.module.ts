@@ -4,24 +4,29 @@ import { AppService } from "./app.service"
 
 // Database
 import { MikroOrmModule } from "@mikro-orm/nestjs"
-import mikroConfig from "../config/mikro-orm.config"
+import databaseConfig from "../config/database.config"
 
 // Base and Database
 import { BaseModule } from "src/base/base.module"
 
 // Demo
 import { DemoModule } from "../demo/demo.module"
-import { APP_GUARD } from "@nestjs/core"
-import { RolesGuard } from "src/base/auth/role/roles.guard"
+import { ConfigModule } from "@nestjs/config"
 
 @Module({
     imports: [
+        // Config Environment
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: ['src/environments/local.env']
+        }),
+
         // For Single Database
-        // MikroOrmModule.forRoot(mikroConfig.sampleConfig),
+        // MikroOrmModule.forRoot(databaseConfig.sampleConfig),
 
         // For Multiple Database
-        MikroOrmModule.forRoot(mikroConfig.mainConfig),
-        MikroOrmModule.forRoot(mikroConfig.secondConfig),
+        MikroOrmModule.forRoot(databaseConfig.mainConfig),
+        MikroOrmModule.forRoot(databaseConfig.secondConfig),
         MikroOrmModule.forMiddleware(),
 
         // --- Base Module

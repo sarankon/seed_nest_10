@@ -1,11 +1,7 @@
 import { NestFactory } from "@nestjs/core"
 import { AppModule } from "./app/app.module"
 // import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import {
-    SwaggerModule,
-    DocumentBuilder,
-    SwaggerDocumentOptions,
-} from "@nestjs/swagger"
+import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from "@nestjs/swagger"
 import { NestExpressApplication } from "@nestjs/platform-express"
 import { join } from "path"
 
