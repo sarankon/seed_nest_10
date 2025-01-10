@@ -96,6 +96,23 @@ export class UploadService {
         }
     }
 
+    async findOneFileEntity(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(_UploadFiles, id)
+
+            // fileUrl
+            const hostUrl = this.configService.get<string>('HOST_URL')
+            entity.fileUrl = hostUrl + entity.fileUrl
+
+            return entity
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            console.error(`Data #id:${id} Not Found`)
+            return null
+        }
+    }
+
     async removeFile(id: number) {
         try {
             const entity = await this.em.findOneOrFail(_UploadFiles, id)
@@ -168,6 +185,23 @@ export class UploadService {
         }
     }
 
+    async findOneDocumentEntity(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(_UploadDocuments, id)
+
+            // fileUrl
+            const hostUrl = this.configService.get<string>('HOST_URL')
+            entity.fileUrl = hostUrl + entity.fileUrl
+
+            return entity
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            console.error(`Data #id:${id} Not Found`)
+            return null
+        }
+    }
+
     async removeDocument(id: number) {
         try {
             const entity = await this.em.findOneOrFail(_UploadDocuments, id)
@@ -237,6 +271,23 @@ export class UploadService {
             console.error(err.name)
             console.error(err.message)
             throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async findOneImageEntity(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(_UploadImages, id)
+
+            // fileUrl
+            const hostUrl = this.configService.get<string>('HOST_URL')
+            entity.fileUrl = hostUrl + entity.fileUrl
+
+            return entity
+        } catch (err) {
+            console.error(err.name)
+            console.error(err.message)
+            console.error(`Data #id:${id} Not Found`)
+            return null
         }
     }
 
