@@ -6,7 +6,7 @@ export class _Group extends BaseEntity {
     @Property({ columnType: "uuid", unique: "uuid" })
     uuid!: string
 
-    @Property({ columnType: "character varying(250)" })
+    @Property({ columnType: "character varying(250)", unique: "name" })
     name!: string
 
     @Property({ columnType: "character varying(250)" })

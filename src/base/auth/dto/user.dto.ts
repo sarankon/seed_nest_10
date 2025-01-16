@@ -1,7 +1,7 @@
 // import { Role } from "../role/role.enum"
 
 export class UserDto {
-    uuid!: number
+    uuid!: string
     username!: string
     firstName!: string
     lastName!: string
