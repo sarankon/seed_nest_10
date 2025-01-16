@@ -114,7 +114,7 @@ export class UserService {
     // Authen Service
     async findByUsername(username: string) {
         try {
-            const entity = await this.em.findOneOrFail(_User, { username: username })
+            const entity = await this.em.findOneOrFail(_User, { username: username }, { populate: ['organization', 'roles', 'groups']})
             return entity
         } catch (err) {
             console.error("Error:", err)

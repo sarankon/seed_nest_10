@@ -1,4 +1,4 @@
-import { Role } from "../role/role.enum"
+// import { Role } from "../role/role.enum"
 
 export class UserDto {
     uuid!: number
@@ -6,5 +6,7 @@ export class UserDto {
     firstName!: string
     lastName!: string
     email!: string
-    roles!: Role[]
+    roles?: Array<unknown>
+    groups?: Array<unknown>
+    organization?: string
 }

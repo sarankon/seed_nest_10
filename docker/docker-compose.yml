@@ -24,7 +24,7 @@ services:
     volumes:
       # - /home/lanmuang/database/main:/var/lib/mysql:Z
       # - D:\\Docker\\Volumes\lanmuang\database\main:/var/lib/mysql:Z
-      - volume_main:/var/lib/mysql:Z
+      - volume_db_main:/var/lib/mysql:Z
     environment:
       - MARIADB_DATABASE=seed
       - MARIADB_ROOT_PASSWORD=root
@@ -42,7 +42,7 @@ services:
     volumes:
       # - /home/lanmuang/database/second:/var/lib/mysql:Z
       # - D:\\Docker\\Volumes\lanmuang\database\second:/var/lib/mysql:Z
-      - volume_second:/var/lib/mysql:Z
+      - volume_db_second:/var/lib/mysql:Z
     environment:
       - MARIADB_DATABASE=seed
       - MARIADB_ROOT_PASSWORD=root
@@ -68,10 +68,10 @@ services:
 volumes:
   volume_api:
     name: seed-volume-api
-  volume_main:
-    name: seed-volume-main
-  volume_second:
-    name: seed-volume-second
+  volume_db_main:
+    name: seed-volume-db-main
+  volume_db_second:
+    name: seed-volume-db-second
 
 networks:
   seed:

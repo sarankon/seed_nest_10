@@ -28,13 +28,13 @@ export class _User extends BaseEntity {
     @Property({ columnType: "character varying(250)", nullable: true })
     phone?: string
 
-    // Organization, Roles, Groups
-    @ManyToOne()
-    organization?: _Organization
-
+    // Roles, Groups, Organization
     @ManyToMany(() => _Role)
     roles?: Collection<_Role> = new Collection<_Role>(this)
 
     @ManyToMany(() => _Group)
     groups?: Collection<_Group> = new Collection<_Group>(this)
+
+    @ManyToOne()
+    organization?: _Organization
 }

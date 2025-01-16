@@ -12,6 +12,8 @@ import { Role } from "./role/role.enum"
 import { CreateUserDto } from "../user/dto/create-user.dto"
 import { UserLoginDto } from "./dto/login-user.dto"
 import { OrganizationCreateDto } from "./dto/org-create.dto"
+import { RoleCreateDto } from "./dto/role-create.dto"
+import { GroupCreateDto } from "./dto/group-create.dto"
 // import { UserLogoutDto } from "./dto/logout-user.dto"
 
 @Controller("auth")
@@ -62,6 +64,7 @@ export class AuthController {
     @Get("info")
     @ApiBearerAuth()
     infoUser(@Request() request) {
+        // console.log("Request: ", request)
         console.log("Profile User: ", request.user)
         return request.user
     }
@@ -75,12 +78,30 @@ export class AuthController {
         return request.user
     }
 
+    // Roles
+    @UseGuards(JwtAuthGuard)
+    @Post('roleCreate')
+    @ApiBearerAuth()
+    createRole(@Request() request, @Body() createDto: RoleCreateDto) {
+        // console.log('User: ', request.user)
+        return this.authService.createRole(createDto)
+    }
+
+    // Groups
+    @UseGuards(JwtAuthGuard)
+    @Post('groupCreate')
+    @ApiBearerAuth()
+    createGroup(@Request() request, @Body() createDto: GroupCreateDto) {
+        // console.log('User: ', request.user)
+        return this.authService.createGroup(createDto)
+    }
+
     // Organization (Create, Read, Update, Delete)
     @UseGuards(JwtAuthGuard)
     @Post('orgCreate')
     @ApiBearerAuth()
     createOrg(@Request() request, @Body() createDto: OrganizationCreateDto) {
-        console.log('User: ', request.user)
+        // console.log('User: ', request.user)
         return this.authService.createOrg(createDto)
     }
 
