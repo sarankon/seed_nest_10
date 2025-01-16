@@ -8,4 +8,7 @@ export class _Role extends BaseEntity {
 
     @Property({ columnType: "character varying(250)" })
     name!: string
+
+    @Property({ columnType: "character varying(250)" })
+    description?: string
 }

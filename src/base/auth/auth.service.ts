@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import jwtConfig from "../../config/jwt.config"
 
@@ -7,11 +7,20 @@ import { UserDto } from "./dto/user.dto"
 import { Role } from "./role/role.enum"
 import { ResponseBody } from "../response-body"
 
+import { EntityManager } from "@mikro-orm/core"
+import { InjectEntityManager } from "@mikro-orm/nestjs"
+import { v4 as uuidv4 } from "uuid"
+import { _Organization } from "./entity/organization.entity"
+
+import { OrganizationCreateDto } from "./dto/org-create.dto"
+import { OrganizationUpdateDto } from "./dto/org-update.dto"
+
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
+        @InjectEntityManager("main") private readonly em: EntityManager,
     ) {}
 
     // Local Strategy (validate) -> validateUser
@@ -47,7 +56,7 @@ export class AuthService {
             access_token: this.jwtService.sign(payload, {
                 expiresIn: jwtConfig.expiresIn,
             }),
-            refresh_token: ''
+            refresh_token: "",
         }
         return new ResponseBody(200, data)
     }
@@ -59,7 +68,7 @@ export class AuthService {
 
     async isAuthenticated() {
         return new ResponseBody(200, {
-            isAuthenticated: true
+            isAuthenticated: true,
         })
     }
 
@@ -70,4 +79,64 @@ export class AuthService {
 
     // Used UserService CreateUser
     // async register() {}
+
+    async createOrg(createDto: OrganizationCreateDto) {
+        try {
+            const entity: _Organization = new _Organization()
+            entity.uuid = uuidv4()
+            entity.name = createDto.name
+            if (createDto.description) {
+                entity.description = createDto.description
+            }
+            await this.em.persist(entity).flush()
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error("Error:", err)
+            throw new BadRequestException({
+                statusCode: 400,
+                error: err.sqlMessage,
+                message: "",
+            })
+        }
+    }
+
+    async findAllOrg() {
+        const list = await this.em.findAll(_Organization)
+        console.log(list)
+        return new ResponseBody(200, list)
+    }
+
+    async findOneOrg(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(_Organization, { id: id })
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error("Error:", err)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async updateOrg(id: number, updateEntity: OrganizationUpdateDto) {
+        try {
+            const entity = await this.em.findOneOrFail(_Organization, { id: id })
+            this.em.assign(entity, updateEntity, { mergeObjectProperties: true })
+            await this.em.flush()
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error("Error:", err)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
+
+    async removeOrg(id: number) {
+        try {
+            const entity = await this.em.findOneOrFail(_Organization, { id: id })
+            this.em.remove(entity)
+            await this.em.flush()
+            return new ResponseBody(200, entity)
+        } catch (err) {
+            console.error("Error:", err)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
+        }
+    }
 }

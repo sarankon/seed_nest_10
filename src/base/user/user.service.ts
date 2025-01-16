@@ -30,21 +30,21 @@ export class UserService {
     }
 
     // Basic Service
-    async create(createUserDto: CreateUserDto) {
+    async create(createDto: CreateUserDto) {
         let hashPassword: string = ""
-        await this.hashPassword(createUserDto.password).then((hash) => {
+        await this.hashPassword(createDto.password).then((hash) => {
             hashPassword = hash
         })
 
         try {
             const entity: _User = new _User()
             entity.uuid = uuidv4()
-            entity.username = createUserDto.username
+            entity.username = createDto.username
             entity.password = hashPassword
-            entity.firstName = createUserDto.firstName
-            entity.lastName = createUserDto.lastName
-            entity.email = createUserDto.email
-            entity.phone = createUserDto.phone
+            entity.firstName = createDto.firstName
+            entity.lastName = createDto.lastName
+            entity.email = createDto.email
+            entity.phone = createDto.phone
             await this.em.persist(entity).flush()
 
             entity.password = "<hidden>"
@@ -79,16 +79,16 @@ export class UserService {
         }
     }
 
-    async update(id: number, updateEntity: UpdateUserDto) {
+    async update(id: number, updateDto: UpdateUserDto) {
         try {
             const entity = await this.em.findOneOrFail(_User, { id: id })
 
-            if(updateEntity.password != "") {
-                const hashPassword = await this.hashPassword(updateEntity.password)
-                updateEntity.password = hashPassword
+            if(updateDto.password != "") {
+                const hashPassword = await this.hashPassword(updateDto.password)
+                updateDto.password = hashPassword
             }
 
-            this.em.assign(entity, updateEntity, { mergeObjectProperties: true })
+            this.em.assign(entity, updateDto, { mergeObjectProperties: true })
             await this.em.flush()
             entity.password = "<hidden>"
             return new ResponseBody(200, entity)

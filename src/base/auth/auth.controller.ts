@@ -11,6 +11,7 @@ import { Role } from "./role/role.enum"
 
 import { CreateUserDto } from "../user/dto/create-user.dto"
 import { UserLoginDto } from "./dto/login-user.dto"
+import { OrganizationCreateDto } from "./dto/org-create.dto"
 // import { UserLogoutDto } from "./dto/logout-user.dto"
 
 @Controller("auth")
@@ -73,4 +74,42 @@ export class AuthController {
         console.log("Role Admin: ", request.user)
         return request.user
     }
+
+    // Organization (Create, Read, Update, Delete)
+    @UseGuards(JwtAuthGuard)
+    @Post('orgCreate')
+    @ApiBearerAuth()
+    createOrg(@Request() request, @Body() createDto: OrganizationCreateDto) {
+        console.log('User: ', request.user)
+        return this.authService.createOrg(createDto)
+    }
+
+    // @UseGuards(JwtAuthGuard)
+    // @ApiBearerAuth()
+    // findOneOrg(@Request() request) {
+        
+    // }
+
+    // @UseGuards(JwtAuthGuard)
+    // @ApiBearerAuth()
+    // findAllOrg(@Request() request) {
+        
+    // }
+
+    // @UseGuards(JwtAuthGuard)
+    // @ApiBearerAuth()
+    // updateOrg(@Request() request) {
+        
+    // }
+
+    // @UseGuards(JwtAuthGuard)
+    // @ApiBearerAuth()
+    // removeOrg(@Request() request) {
+
+    // }
+
+    // Roles (Create, Update, Delete)
+
+
+    // Group (Create, Update, Delete)
 }
