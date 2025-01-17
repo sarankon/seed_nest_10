@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common"
 import { EntityManager, MikroORM } from "@mikro-orm/core"
 import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
 
-// import { SampleSeeder } from 'src/config/seeds/sample'
-
 @Injectable()
 export class DatabaseService {
     constructor(
@@ -13,8 +11,12 @@ export class DatabaseService {
 
         // For Multiple Database
         @InjectMikroORM("main") private readonly ormMain: MikroORM,
-        @InjectMikroORM("second") private readonly ormSecond: MikroORM,
+        // @InjectMikroORM("second") private readonly ormSecond: MikroORM,
+
+        @InjectEntityManager("main") private readonly emMain: EntityManager,
+        // @InjectEntityManager("second") private readonly emSecond: EntityManager
     ) {
+        // Development
         this.initialDatabase()
     }
 

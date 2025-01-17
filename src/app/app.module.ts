@@ -1,17 +1,15 @@
 import { Module } from "@nestjs/common"
 import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
+// Config
+import { ConfigModule } from "@nestjs/config"
 
 // Database
 import { MikroOrmModule } from "@mikro-orm/nestjs"
 import databaseConfig from "../config/database.config"
 
-// Base and Database
+// Base
 import { BaseModule } from "src/base/base.module"
-
-// Demo
-import { DemoModule } from "../demo/demo.module"
-import { ConfigModule } from "@nestjs/config"
 
 @Module({
     imports: [
@@ -21,6 +19,7 @@ import { ConfigModule } from "@nestjs/config"
             envFilePath: ['src/environments/local.env']
         }),
 
+        // ----- Database -----
         // For Single Database
         // MikroOrmModule.forRoot(databaseConfig.sampleConfig),
 
@@ -29,11 +28,10 @@ import { ConfigModule } from "@nestjs/config"
         MikroOrmModule.forRoot(databaseConfig.secondConfig),
         MikroOrmModule.forMiddleware(),
 
-        // --- Base Module
+        // ----- Base Module -----
         BaseModule,
-        DemoModule,
 
-        // Project Module
+        // ----- Project Module -----
     ],
     controllers: [
         AppController
