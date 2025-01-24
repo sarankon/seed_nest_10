@@ -15,7 +15,7 @@ import { DatabaseService } from "./database/database.service";
     ],
     controllers: [],
     providers: [
-        // DatabaseService
+        DatabaseService
     ],
     exports: [],
 })
