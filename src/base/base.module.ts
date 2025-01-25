@@ -5,6 +5,7 @@ import { AuthModule } from "./auth/auth.module"
 import { UploadModule } from "./upload/upload.module"
 import { InitialModule } from './initial/initial.module';
 import { DatabaseService } from "./database/database.service";
+import { PdfModule } from './pdf/pdf.module';
 
 @Module({
     imports: [
@@ -12,6 +13,7 @@ import { DatabaseService } from "./database/database.service";
         AuthModule,
         UploadModule,
         InitialModule,
+        PdfModule,
     ],
     controllers: [],
     providers: [

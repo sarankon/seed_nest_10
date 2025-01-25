@@ -54,3 +54,10 @@ nest generate module base/initial
 nest generate controller base/initial
 nest generate service base/initial
 ```
+
+## PDF Generator
+``` bash
+nest generate module base/pdf
+nest generate controller base/pdf
+nest generate service base/pdf
+```

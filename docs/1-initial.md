@@ -84,6 +84,14 @@ SwaggerModule.setup('api', app, documentFactory, {
 });
 ```
 
+# Config
 ``` bash
 npm install --save @nestjs/config
+```
+
+# PDF Lib
+PDF Lib <br />
+https://pdf-lib.js.org/ <br />
+``` bash
+npm install pdf-lib
 ```
