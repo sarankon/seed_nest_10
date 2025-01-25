@@ -2,6 +2,8 @@ import { Controller, Get } from "@nestjs/common"
 import { PdfService } from "./pdf.service"
 
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
+import * as ExcelJS from "exceljs"
+import { writeFile } from "fs"
 
 @Controller("pdf")
 export class PdfController {
@@ -34,6 +36,17 @@ export class PdfController {
         // Serialize the PDFDocument to bytes (a Uint8Array)
         const pdfBytes = await pdfDoc.save()
 
-        
+        writeFile("./file.pdf", pdfBytes, () => {})
+
+        const workbook = new ExcelJS.Workbook()
+        workbook.creator = 'Me';
+        workbook.lastModifiedBy = 'Her';
+        workbook.created = new Date(1985, 8, 30);
+        workbook.modified = new Date();
+        workbook.lastPrinted = new Date(2016, 9, 27);
+
+        const sheet = workbook.addWorksheet('My Sheet');
+
+        workbook.xlsx.writeFile("./file.xlsx")
     }
 }
