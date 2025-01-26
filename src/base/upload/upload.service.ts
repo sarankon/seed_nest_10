@@ -61,7 +61,7 @@ export class UploadService {
         await this.em.flush()
 
         // fileUrl
-        const hostUrl = this.configService.get<string>('HOST_URL')
+        const hostUrl = this.configService.get<string>("HOST_URL")
         upload.fileUrl = hostUrl + upload.fileUrl
 
         return new ResponseBody("200", upload)
@@ -72,7 +72,7 @@ export class UploadService {
         console.log(list)
 
         // fileUrl
-        const hostUrl = this.configService.get<string>('HOST_URL')
+        const hostUrl = this.configService.get<string>("HOST_URL")
         list.forEach((file) => {
             file.fileUrl = hostUrl + file.fileUrl
         })
@@ -85,7 +85,7 @@ export class UploadService {
             const entity = await this.em.findOneOrFail(_UploadFiles, id)
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return new ResponseBody(200, entity)
@@ -101,7 +101,7 @@ export class UploadService {
             const entity = await this.em.findOneOrFail(_UploadFiles, id)
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return entity
@@ -120,7 +120,7 @@ export class UploadService {
             await this.em.flush()
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return new ResponseBody(200, entity)
@@ -150,7 +150,7 @@ export class UploadService {
         await this.em.flush()
 
         // fileUrl
-        const hostUrl = this.configService.get<string>('HOST_URL')
+        const hostUrl = this.configService.get<string>("HOST_URL")
         upload.fileUrl = hostUrl + upload.fileUrl
 
         return new ResponseBody("200", upload)
@@ -161,7 +161,7 @@ export class UploadService {
         console.log(list)
 
         // fileUrl
-        const hostUrl = this.configService.get<string>('HOST_URL')
+        const hostUrl = this.configService.get<string>("HOST_URL")
         list.forEach((file) => {
             file.fileUrl = hostUrl + file.fileUrl
         })
@@ -174,7 +174,7 @@ export class UploadService {
             const entity = await this.em.findOneOrFail(_UploadDocuments, id)
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return new ResponseBody(200, entity)
@@ -190,7 +190,7 @@ export class UploadService {
             const entity = await this.em.findOneOrFail(_UploadDocuments, id)
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return entity
@@ -209,7 +209,7 @@ export class UploadService {
             await this.em.flush()
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return new ResponseBody(200, entity)
@@ -239,7 +239,7 @@ export class UploadService {
         await this.em.flush()
 
         // fileUrl
-        const hostUrl = this.configService.get<string>('HOST_URL')
+        const hostUrl = this.configService.get<string>("HOST_URL")
         upload.fileUrl = hostUrl + upload.fileUrl
 
         return new ResponseBody("200", upload)
@@ -250,7 +250,7 @@ export class UploadService {
         console.log(list)
 
         // fileUrl
-        const hostUrl = this.configService.get<string>('HOST_URL')
+        const hostUrl = this.configService.get<string>("HOST_URL")
         list.forEach((file) => {
             file.fileUrl = hostUrl + file.fileUrl
         })
@@ -263,7 +263,7 @@ export class UploadService {
             const entity = await this.em.findOneOrFail(_UploadImages, id)
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return new ResponseBody(200, entity)
@@ -279,7 +279,7 @@ export class UploadService {
             const entity = await this.em.findOneOrFail(_UploadImages, id)
 
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return entity
@@ -296,9 +296,9 @@ export class UploadService {
             const entity = await this.em.findOneOrFail(_UploadImages, id)
             this.em.remove(entity)
             await this.em.flush()
-            
+
             // fileUrl
-            const hostUrl = this.configService.get<string>('HOST_URL')
+            const hostUrl = this.configService.get<string>("HOST_URL")
             entity.fileUrl = hostUrl + entity.fileUrl
 
             return new ResponseBody(200, entity)

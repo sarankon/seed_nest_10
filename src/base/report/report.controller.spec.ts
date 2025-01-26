@@ -1,15 +1,15 @@
 import { Test, TestingModule } from "@nestjs/testing"
-import { PdfController } from "./pdf.controller"
+import { ReportController } from "./report.controller"
 
-describe("PdfController", () => {
-    let controller: PdfController
+describe("ReportController", () => {
+    let controller: ReportController
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            controllers: [PdfController],
+            controllers: [ReportController],
         }).compile()
 
-        controller = module.get<PdfController>(PdfController)
+        controller = module.get<ReportController>(ReportController)
     })
 
     it("should be defined", () => {

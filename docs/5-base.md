@@ -55,9 +55,9 @@ nest generate controller base/initial
 nest generate service base/initial
 ```
 
-## PDF Generator
+## Report Generator
 ``` bash
-nest generate module base/pdf
-nest generate controller base/pdf
-nest generate service base/pdf
+nest generate module base/report
+nest generate controller base/report
+nest generate service base/report
 ```

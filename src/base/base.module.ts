@@ -1,19 +1,20 @@
 import { Module } from "@nestjs/common"
 
+import { InitialModule } from './initial/initial.module';
+import { DatabaseService } from "./database/database.service";
+
 import { UserModule } from "./user/user.module"
 import { AuthModule } from "./auth/auth.module"
 import { UploadModule } from "./upload/upload.module"
-import { InitialModule } from './initial/initial.module';
-import { DatabaseService } from "./database/database.service";
-import { PdfModule } from './pdf/pdf.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
     imports: [
+        InitialModule,
         UserModule,
         AuthModule,
         UploadModule,
-        InitialModule,
-        PdfModule,
+        ReportModule,
     ],
     controllers: [],
     providers: [
