@@ -3,10 +3,10 @@ import { ConfigService } from "@nestjs/config"
 import { EntityManager } from "@mikro-orm/core"
 import { InjectEntityManager } from "@mikro-orm/nestjs"
 
-import { readFileSync, writeFileSync } from "fs"
+import { readFileSync, writeFileSync, existsSync } from "fs"
 import * as ExcelJS from "exceljs"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
-import fontkit from "@pdf-lib/fontkit"
+import * as fontkit from "@pdf-lib/fontkit"
 
 import { v4 as uuidv4 } from "uuid"
 import { ResponseBody } from "../response-body"
@@ -124,6 +124,19 @@ export class ReportService {
 
     async exportPDF() {
         try {
+            const fontPath = "./public/fonts/libre_barcode_128/libre_barcode_128-regular.ttf"
+            // const fontPath = "./public/fonts/Sarabun-Regular.ttf"
+            console.log(__dirname)
+
+            if (!existsSync(fontPath)) {
+                throw new Error(`Font file not found at: ${fontPath}`)
+            }
+
+            const fontByte = readFileSync(fontPath)
+            if (fontByte.length === 0) {
+                throw new Error(`Font file is empty: ${fontPath}`)
+            }
+
             // Create a new PDFDocument
             const pdfDocument = await PDFDocument.create()
             pdfDocument.registerFontkit(fontkit)
@@ -136,25 +149,23 @@ export class ReportService {
             const timesRomanFont = await pdfDocument.embedFont(StandardFonts.TimesRoman)
             // Draw a string of text toward the top of the page
             const fontSize = 30
-            page.drawText("PDF", {
-                x: 50,
-                y: height - 4 * fontSize,
-                size: fontSize,
-                font: timesRomanFont,
-                color: rgb(0, 0.53, 0.71),
-            })
-
-            // Add Font Barcode Font
-            const fontBytes = readFileSync("./public/fonts/libre_barcode_128/libre_barcode_128-regular.ttf")
-            console.log(fontBytes.length)
-            // const libreBarcode128Font = await pdfDocument.embedFont(fontBytes)
-            // page.drawText("10005", {
+            // page.drawText("PDF", {
             //     x: 50,
             //     y: height - 4 * fontSize,
             //     size: fontSize,
-            //     font: libreBarcode128Font,
+            //     font: timesRomanFont,
             //     color: rgb(0, 0.53, 0.71),
             // })
+
+            // Add Font Barcode Font
+            const fontBytes = readFileSync("./public/fonts/libre_barcode_128/libre_barcode_128-regular.ttf")
+            const libreBarcode128Font = await pdfDocument.embedFont(fontBytes, { subset: true })
+            page.drawText(this.encodeToCode128("10005"), {
+                x: 50,
+                y: height - 4 * fontSize,
+                size: fontSize,
+                font: libreBarcode128Font,
+            })
 
             // Serialize the PDFDocument to bytes (a Uint8Array)
             const pdfBytes = await pdfDocument.save()
@@ -188,5 +199,43 @@ export class ReportService {
                 message: "",
             })
         }
+    }
+
+    // Barcode Encoder
+    checkSum128(data, startCode) {
+        let sum = startCode
+        for (let i = 0; i < data.length; i++) {
+            const code = data.charCodeAt(i)
+            const value = code > 199 ? code - 100 : code - 32
+            sum += (i + 1) * value
+        }
+
+        let checksum = (sum % 103) + 32
+        if (checksum > 126) checksum = checksum + 68
+        return String.fromCharCode(checksum)
+    }
+
+    toSetC(text) {
+        return text
+            .match(/\d{2}/g)
+            .map((ascii, index) => {
+                const codeC = Number(ascii)
+                const charCode = codeC > 94 ? codeC + 100 : codeC + 32
+                return String.fromCharCode(charCode)
+            })
+            .join("")
+    }
+
+    encodeToCode128(text, codeABC = "B") {
+        const startCode = String.fromCharCode(codeABC.toUpperCase().charCodeAt(0) + 138)
+        const stop = String.fromCharCode(206)
+
+        text = (codeABC == "C" && this.toSetC(text)) || text
+
+        const check = this.checkSum128(text, startCode.charCodeAt(0) - 100)
+
+        text = text.replace(" ", String.fromCharCode(194))
+
+        return startCode + text + check + stop
     }
 }
