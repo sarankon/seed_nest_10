@@ -55,8 +55,18 @@ nest generate controller base/initial
 nest generate service base/initial
 ```
 
-## Report Generator
+## Report Generator (CSV, EXCEL, PDF)
+Library for Generate CSV and EXCEL <br/>
+https://www.npmjs.com/package/exceljs <br/>
+
+Library for Generate PDF <br/>
+https://www.npmjs.com/package/pdf-lib <br/>
+
 ``` bash
+npm install exceljs
+npm install pdf-lib
+npm install @pdf-lib/fontkit
+
 nest generate module base/report
 nest generate controller base/report
 nest generate service base/report
