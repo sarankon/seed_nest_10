@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common"
+import { ConfigService } from "@nestjs/config"
 import { EntityManager, MikroORM } from "@mikro-orm/core"
 import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
 
@@ -9,14 +10,21 @@ import { _Role } from "../auth/entity/role.entity"
 import { _User } from "../user/entities/user.entity"
 import { UserService } from "../user/user.service"
 
+
 @Injectable()
 export class InitialService {
     constructor(
+        // Config Service
+        private readonly configService: ConfigService,
+
         // For Multiple Database
         @InjectMikroORM("main") private readonly ormMain: MikroORM,
         @InjectEntityManager("main") private readonly emMain: EntityManager,
         private readonly userService: UserService
-    ) {}
+    ) {
+        console.log("---------- Initial Service ----------")
+        console.log("Environment : " + configService.get<string>("ENV"))
+    }
 
     async initialDatabase() {
         console.info("Initial Database ...")

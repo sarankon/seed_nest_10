@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from "@nestjs/common"
-import { ConfigService } from "@nestjs/config"
 import { EntityManager } from "@mikro-orm/core"
 import { InjectEntityManager } from "@mikro-orm/nestjs"
+import reportConfig from "../../config/report.config"
 
-import { readFileSync, writeFileSync, existsSync } from "fs"
+import * as FileSystem from "fs"
 import * as ExcelJS from "exceljs"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
-import * as fontkit from "@pdf-lib/fontkit"
+import * as FontKit from "@pdf-lib/fontkit"
 
 import { v4 as uuidv4 } from "uuid"
 import { ResponseBody } from "../response-body"
@@ -15,13 +15,30 @@ import { _ReportCSV } from "./entities/report-csv.entity"
 import { _ReportXLSX } from "./entities/report-xlsx.entity"
 import { _ReportPDF } from "./entities/report-pdf.entity"
 
+
 @Injectable()
 export class ReportService {
+
     constructor(
-        private readonly configService: ConfigService,
         @InjectEntityManager("main") private readonly em: EntityManager,
     ) {
-        console.log("Environment : " + configService.get<string>("ENV"))
+        // --- Check Report Path and Initil Folder
+        if (!FileSystem.existsSync(reportConfig().reportPath)) {
+            FileSystem.mkdirSync(reportConfig().reportPath)
+
+            if (!FileSystem.existsSync(reportConfig().csvPath)) {
+                FileSystem.mkdirSync(reportConfig().csvPath)
+            }
+            if (!FileSystem.existsSync(reportConfig().xlsxPath)) {
+                FileSystem.mkdirSync(reportConfig().xlsxPath)
+            }
+            if (!FileSystem.existsSync(reportConfig().pdfPath)) {
+                FileSystem.mkdirSync(reportConfig().pdfPath)
+            }
+        }
+
+        // --- Check Font File Path
+
     }
 
     async exportCSV() {
@@ -44,8 +61,8 @@ export class ReportService {
 
             // ----- File Name And Path
             const fileName = uuidv4() + ".csv"
-            const csvSavePath = this.configService.get<string>("CSV_PATH")
-            const csvFileUrl = this.configService.get<string>("CSV_URL")
+            const csvSavePath = reportConfig().csvPath
+            const csvFileUrl = reportConfig().csvUrl
 
             // ----- Write File
             await workbook.csv.writeFile(csvSavePath + fileName)
@@ -59,7 +76,7 @@ export class ReportService {
             reportCSV.mimeTypes = "text/csv"
             await this.em.persist(reportCSV).flush()
 
-            const hostUrl = this.configService.get<string>("HOST_URL")
+            const hostUrl = reportConfig().hostUrl
             reportCSV.fileUrl = hostUrl + reportCSV.fileUrl
 
             return new ResponseBody(200, reportCSV)
@@ -93,8 +110,8 @@ export class ReportService {
 
             // ----- File Name And Path
             const fileName = uuidv4() + ".xlsx"
-            const xlsxSavePath = this.configService.get<string>("XLSX_PATH")
-            const xlsxFileUrl = this.configService.get<string>("XLSX_URL")
+            const xlsxSavePath = reportConfig().xlsxPath
+            const xlsxFileUrl = reportConfig().xlsxUrl
 
             // ----- Write File
             await workbook.xlsx.writeFile(xlsxSavePath + fileName)
@@ -108,7 +125,7 @@ export class ReportService {
             reportXLSX.mimeTypes = "application/vnd.ms-excel"
             await this.em.persist(reportXLSX).flush()
 
-            const hostUrl = this.configService.get<string>("HOST_URL")
+            const hostUrl = reportConfig().hostUrl
             reportXLSX.fileUrl = hostUrl + reportXLSX.fileUrl
 
             return new ResponseBody(200, reportXLSX)
@@ -125,21 +142,19 @@ export class ReportService {
     async exportPDF() {
         try {
             const fontPath = "./public/fonts/libre_barcode_128/libre_barcode_128-regular.ttf"
-            // const fontPath = "./public/fonts/Sarabun-Regular.ttf"
-            console.log(__dirname)
 
-            if (!existsSync(fontPath)) {
+            if (!FileSystem.existsSync(fontPath)) {
                 throw new Error(`Font file not found at: ${fontPath}`)
             }
 
-            const fontByte = readFileSync(fontPath)
+            const fontByte = FileSystem.readFileSync(fontPath)
             if (fontByte.length === 0) {
                 throw new Error(`Font file is empty: ${fontPath}`)
             }
 
             // Create a new PDFDocument
             const pdfDocument = await PDFDocument.create()
-            pdfDocument.registerFontkit(fontkit)
+            pdfDocument.registerFontkit(FontKit)
             // Add a blank page to the document
             const page = pdfDocument.addPage([595, 842])
             // Get the width and height of the page
@@ -158,7 +173,7 @@ export class ReportService {
             // })
 
             // Add Font Barcode Font
-            const fontBytes = readFileSync("./public/fonts/libre_barcode_128/libre_barcode_128-regular.ttf")
+            const fontBytes = FileSystem.readFileSync("./public/fonts/libre_barcode_128/libre_barcode_128-regular.ttf")
             const libreBarcode128Font = await pdfDocument.embedFont(fontBytes, { subset: true })
             page.drawText(this.encodeToCode128("10005"), {
                 x: 50,
@@ -172,11 +187,11 @@ export class ReportService {
 
             // ----- File Name And Path
             const fileName = uuidv4() + ".pdf"
-            const pdfSavePath = this.configService.get<string>("PDF_PATH")
-            const pdfFileUrl = this.configService.get<string>("PDF_URL")
+            const pdfSavePath = reportConfig().pdfPath
+            const pdfFileUrl = reportConfig().pdfUrl
 
             // ----- Write File
-            writeFileSync(pdfSavePath + fileName, pdfBytes)
+            FileSystem.writeFileSync(pdfSavePath + fileName, pdfBytes)
 
             // ----- Save Data To Database
             const reportPDF = new _ReportPDF()
@@ -187,7 +202,7 @@ export class ReportService {
             reportPDF.mimeTypes = "application/pdf"
             await this.em.persist(reportPDF).flush()
 
-            const hostUrl = this.configService.get<string>("HOST_URL")
+            const hostUrl = reportConfig().hostUrl
             reportPDF.fileUrl = hostUrl + reportPDF.fileUrl
 
             return new ResponseBody(200, reportPDF)

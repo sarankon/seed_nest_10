@@ -1,22 +1,32 @@
 import { Module } from "@nestjs/common"
 import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
+
 // Config
 import { ConfigModule } from "@nestjs/config"
+import reportConfig from "src/config/report.config"
+import databaseConfig from "src/config/database.config"
 
 // Database
 import { MikroOrmModule } from "@mikro-orm/nestjs"
-import databaseConfig from "../config/database.config"
 
 // Base
 import { BaseModule } from "src/base/base.module"
+import serverConfig from "src/config/server.config"
+
 
 @Module({
     imports: [
         // Config Environment
         ConfigModule.forRoot({
+            cache: false,
             isGlobal: true,
-            envFilePath: ['src/environments/local.env']
+            expandVariables: true,
+            envFilePath: ['src/environments/local.env'],
+            load: [
+                serverConfig,
+                reportConfig
+            ]
         }),
 
         // ----- Database -----

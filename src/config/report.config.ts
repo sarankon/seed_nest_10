@@ -1,17 +1,20 @@
-const reportConfig = {
+export default () => ({
+    // Host URL
+    hostUrl: process.env.HOST_URL,
+    
+    // Report Path
+    reportPath: process.env.REPORT_PATH,
+    reportUrl: process.env.REPORT_URL,
 
     // CSV File
-    csvPath: "./public/report/csv",
-    csvUrl: "/report/csv/",
+    csvPath: process.env.CSV_PATH,
+    csvUrl: process.env.CSV_URL,
 
-    // Excel File
-    excelPath: "./public/report/excel",
-    excelUrl: "/report/excel/",
+    // XLSX File
+    xlsxPath: process.env.XLSX_PATH,
+    xlsxUrl: process.env.XLSX_URL,
 
     // PDF File
-    pdfPath: "./public/report/pdf",
-    pdfUrl: "/report/pdf/",
-    
-}
-
-export default reportConfig
+    pdfPath: process.env.PDF_PATH,
+    pdfUrl: process.env.PDF_URL,
+})

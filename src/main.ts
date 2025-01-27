@@ -19,7 +19,7 @@ async function bootstrap() {
         .setTitle("Seed Nest 10 (Example)")
         .setDescription("Seed Nest API Description")
         .setVersion("1.0")
-        .addServer("http://localhost:" + serverConfig.port)
+        .addServer("http://localhost:" + serverConfig().port)
         .addBasicAuth()
         .addBearerAuth()
         .build()
@@ -40,6 +40,6 @@ async function bootstrap() {
     const documentFactory = () => SwaggerModule.createDocument(app, config, options)
     SwaggerModule.setup("swagger", app, documentFactory)
 
-    await app.listen(process.env.PORT ?? serverConfig.port)
+    await app.listen(process.env.PORT ?? serverConfig().port)
 }
 bootstrap()

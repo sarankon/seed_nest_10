@@ -1,7 +1,6 @@
-const serverConfig = {
+export default () => ({
 
     // Server Port
-    port: 3200
-}
-
-export default serverConfig
+    port: process.env.SERVER_PORT
+    
+})

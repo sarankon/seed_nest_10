@@ -19,7 +19,7 @@ const sampleConfig: Options = {
 
     // enable debug mode to log SQL queries and discovery information
     debug: true,
-
+    
     // seed file
     seeder: {
         path: "./dist/config/seeds", // path to the folder with seeders
