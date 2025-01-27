@@ -71,3 +71,10 @@ nest generate module base/report
 nest generate controller base/report
 nest generate service base/report
 ```
+
+## Barcode Encoder and Fonts
+Libarary for 128 Encoder <br/>
+https://www.npmjs.com/package/code-128-encoder <br/>
+``` bash
+npm install code-128-encoder
+```

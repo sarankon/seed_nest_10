@@ -5,8 +5,9 @@ import reportConfig from "../../config/report.config"
 
 import * as FileSystem from "fs"
 import * as ExcelJS from "exceljs"
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
+import { PDFDocument, PageSizes, StandardFonts, rgb } from "pdf-lib"
 import * as FontKit from "@pdf-lib/fontkit"
+import * as Code128Generator from "code-128-encoder"
 
 import { v4 as uuidv4 } from "uuid"
 import { ResponseBody } from "../response-body"
@@ -15,13 +16,9 @@ import { _ReportCSV } from "./entities/report-csv.entity"
 import { _ReportXLSX } from "./entities/report-xlsx.entity"
 import { _ReportPDF } from "./entities/report-pdf.entity"
 
-
 @Injectable()
 export class ReportService {
-
-    constructor(
-        @InjectEntityManager("main") private readonly em: EntityManager,
-    ) {
+    constructor(@InjectEntityManager("main") private readonly em: EntityManager) {
         // --- Check Report Path and Initil Folder
         if (!FileSystem.existsSync(reportConfig().reportPath)) {
             FileSystem.mkdirSync(reportConfig().reportPath)
@@ -37,8 +34,9 @@ export class ReportService {
             }
         }
 
-        // --- Check Font File Path
-
+        // this.exportCSV()
+        // this.exportXLSX()
+        this.exportPDF()
     }
 
     async exportCSV() {
@@ -156,9 +154,23 @@ export class ReportService {
             const pdfDocument = await PDFDocument.create()
             pdfDocument.registerFontkit(FontKit)
             // Add a blank page to the document
-            const page = pdfDocument.addPage([595, 842])
+
+            // PageSizes.A4 = [595.28, 841.89]
+            const page = pdfDocument.addPage(PageSizes.A4)
+
             // Get the width and height of the page
             const { width, height } = page.getSize()
+
+            // ----------
+            const svgPath = "M 0,0 L 10,0 L 10,10"
+            /// Add a blank page to the document
+            page.moveTo(10, 10)
+
+            // Draw the SVG path as a black line
+            // page.moveDown(25)
+            page.drawSvgPath(svgPath)
+            
+            // ----------
 
             // Embed the Times Roman font
             const timesRomanFont = await pdfDocument.embedFont(StandardFonts.TimesRoman)
@@ -175,7 +187,8 @@ export class ReportService {
             // Add Font Barcode Font
             const fontBytes = FileSystem.readFileSync("./public/fonts/libre_barcode_128/libre_barcode_128-regular.ttf")
             const libreBarcode128Font = await pdfDocument.embedFont(fontBytes, { subset: true })
-            page.drawText(this.encodeToCode128("10005"), {
+            const encoder129 = new Code128Generator()
+            page.drawText(encoder129.encode("10005"), {
                 x: 50,
                 y: height - 4 * fontSize,
                 size: fontSize,
@@ -214,43 +227,5 @@ export class ReportService {
                 message: "",
             })
         }
-    }
-
-    // Barcode Encoder
-    checkSum128(data, startCode) {
-        let sum = startCode
-        for (let i = 0; i < data.length; i++) {
-            const code = data.charCodeAt(i)
-            const value = code > 199 ? code - 100 : code - 32
-            sum += (i + 1) * value
-        }
-
-        let checksum = (sum % 103) + 32
-        if (checksum > 126) checksum = checksum + 68
-        return String.fromCharCode(checksum)
-    }
-
-    toSetC(text) {
-        return text
-            .match(/\d{2}/g)
-            .map((ascii, index) => {
-                const codeC = Number(ascii)
-                const charCode = codeC > 94 ? codeC + 100 : codeC + 32
-                return String.fromCharCode(charCode)
-            })
-            .join("")
-    }
-
-    encodeToCode128(text, codeABC = "B") {
-        const startCode = String.fromCharCode(codeABC.toUpperCase().charCodeAt(0) + 138)
-        const stop = String.fromCharCode(206)
-
-        text = (codeABC == "C" && this.toSetC(text)) || text
-
-        const check = this.checkSum128(text, startCode.charCodeAt(0) - 100)
-
-        text = text.replace(" ", String.fromCharCode(194))
-
-        return startCode + text + check + stop
     }
 }
