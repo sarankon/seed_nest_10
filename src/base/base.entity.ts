@@ -5,23 +5,26 @@ export abstract class BaseEntity {
     id!: number
 
     @Property({ columnType: "boolean", nullable: false, default: true })
-    isEnable?: boolean
+    isEnabled?: boolean
 
-    @Property({ columnType: "timestamp", nullable: true })
-    isDeleted?: Date
+    @Property({ version: true })
+    version!: number
 
     @Property({ columnType: "uuid", nullable: true })
     createdBy?: string
 
-    @Property({ columnType: "timestamp", nullable: true, defaultRaw: `current_timestamp()` })
+    @Property({ columnType: "timestamp", nullable: true })
     createdDate?: Date
 
     @Property({ columnType: "uuid", nullable: true })
     updatedBy?: string
 
-    @Property({ columnType: "timestamp", nullable: true, defaultRaw: `current_timestamp()`, extra: "on update current_timestamp()" })
+    @Property({ columnType: "timestamp", nullable: true })
     updatedDate?: Date
 
-    @Property({ version: true })
-    version!: number
+    @Property({ columnType: "uuid", nullable: true })
+    deletedBy?: string
+
+    @Property({ columnType: "timestamp", nullable: true })
+    deletedDate?: Date
 }

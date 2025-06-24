@@ -2,7 +2,7 @@ import { Entity, Property } from "@mikro-orm/core"
 import { BaseEntity } from "src/base/base.entity"
 
 @Entity()
-export class _TokenAccess extends BaseEntity {
+export class TokenAccess extends BaseEntity {
     @Property({ columnType: "uuid", unique: "uuid" })
     uuid!: string
 

@@ -1,4 +1,4 @@
-export class RoleCreateDto {
+export class CreateOrganizationDto {
     name!: string
     description?: string
 }

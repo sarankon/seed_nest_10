@@ -1,11 +1,11 @@
 import { Collection, Entity, ManyToMany, ManyToOne, Property } from "@mikro-orm/core"
-import { _Group } from "src/base/auth/entity/group.entity"
-import { _Organization } from "src/base/auth/entity/organization.entity"
-import { _Role } from "src/base/auth/entity/role.entity"
 import { BaseEntity } from "src/base/base.entity"
+import { BaseRole } from "src/base/user/entities/role.entity"
+import { BaseGroup } from "src/base/user/entities/group.entity"
+import { BaseOrganization } from "src/base/user/entities/organization.entity"
 
 @Entity()
-export class _User extends BaseEntity {
+export class BaseUser extends BaseEntity {
     @Property({ columnType: "uuid", unique: "uuid" })
     uuid!: string
 
@@ -17,24 +17,24 @@ export class _User extends BaseEntity {
 
     // Basic Profile
     @Property({ columnType: "character varying(250)", nullable: true })
-    firstName!: string
+    firstName?: string
 
     @Property({ columnType: "character varying(250)", nullable: true })
-    lastName!: string
+    lastName?: string
 
-    @Property({ columnType: "character varying(250)", unique: "email" })
-    email!: string
+    @Property({ columnType: "character varying(250)", nullable: true, unique: "email" })
+    email?: string
 
     @Property({ columnType: "character varying(250)", nullable: true })
     phone?: string
 
     // Roles, Groups, Organization
-    @ManyToMany(() => _Role)
-    roles?: Collection<_Role> = new Collection<_Role>(this)
+    @ManyToMany(() => BaseRole)
+    roles?: Collection<BaseRole> = new Collection<BaseRole>(this)
 
-    @ManyToMany(() => _Group)
-    groups?: Collection<_Group> = new Collection<_Group>(this)
+    @ManyToMany(() => BaseGroup)
+    groups?: Collection<BaseGroup> = new Collection<BaseGroup>(this)
 
     @ManyToOne()
-    organization?: _Organization
+    organization?: BaseOrganization
 }

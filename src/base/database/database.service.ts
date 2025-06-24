@@ -5,16 +5,12 @@ import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
 @Injectable()
 export class DatabaseService {
     constructor(
-        // For Single Database
-        // private readonly mikro: MikroORM,
-        // private readonly entityManager: EntityManager,
-
         // For Multiple Database
-        @InjectMikroORM("main") private readonly ormMain: MikroORM,
-        // @InjectMikroORM("second") private readonly ormSecond: MikroORM,
+        @InjectMikroORM("postgreSql") private readonly mikroOrm: MikroORM,
+        @InjectEntityManager("postgreSql") private readonly entityManager: EntityManager,
 
-        @InjectEntityManager("main") private readonly emMain: EntityManager,
-        // @InjectEntityManager("second") private readonly emSecond: EntityManager
+        // @InjectMikroORM("mariaDb") private readonly ormSecond: MikroORM,
+        // @InjectEntityManager("mariaDb") private readonly emSecond: EntityManager
     ) {
         // Development
         this.initialDatabase()
@@ -31,8 +27,10 @@ export class DatabaseService {
         // await this.mikro.seeder.seed(SampleSeeder)
 
         // For Multiple Database
-        // await this.ormMain.schema.dropSchema()
-        await this.ormMain.schema.updateSchema({ safe: true })
+        await this.mikroOrm.schema.dropSchema()
+        await this.mikroOrm.schema.createSchema()
+        // await this.mikroOrm.schema.updateSchema({ safe: true })
+        // await this.ormMain.schema.updateSchema({ safe: true })
 
         console.info("Initial Database Successful :)")
     }

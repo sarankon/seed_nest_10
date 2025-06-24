@@ -5,16 +5,16 @@ import { DatabaseService } from "./database/database.service";
 
 import { UserModule } from "./user/user.module"
 import { AuthModule } from "./auth/auth.module"
-import { UploadModule } from "./upload/upload.module"
-import { ReportModule } from './report/report.module';
+// import { UploadModule } from "./upload/upload.module"
+// import { ReportModule } from './report/report.module';
 
 @Module({
     imports: [
-        InitialModule,
-        UserModule,
-        AuthModule,
-        UploadModule,
-        ReportModule,
+        // InitialModule,
+        // UserModule,
+        // AuthModule,
+        // UploadModule,
+        // ReportModule,
     ],
     controllers: [],
     providers: [

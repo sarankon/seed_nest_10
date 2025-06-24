@@ -1,12 +1,13 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
-import { EntityManager, MikroORM } from "@mikro-orm/core"
+import { EntityManager, UuidType } from "@mikro-orm/core"
+import { InjectEntityManager } from "@mikro-orm/nestjs"
 
-import { BaseUser } from "./entities/user.entity"
+import { BaseUser } from "../../user/entities/user.entity"
 
 // Basic Service
-import { CreateUserDto } from "./dto/create-user.dto"
-import { UpdateUserDto } from "./dto/update-user.dto"
-import { ResponseBody } from "../response-body"
+import { CreateUserDto } from "src/base/user/dto/create-user.dto"
+import { UpdateUserDto } from "src/base/user/dto/update-user.dto"
+import { ResponseBody } from "src/base/response-body"
 
 // import { UserLoginDto } from "../auth/dto/login-user.dto"
 import { v4 as uuidv4 } from "uuid"
@@ -14,10 +15,7 @@ import * as bcrypt from "bcrypt"
 
 @Injectable()
 export class UserService {
-    constructor(
-        private readonly mikroOrm: MikroORM,
-        private readonly entityManager: EntityManager,
-    ) {}
+    constructor(@InjectEntityManager("main") private readonly em: EntityManager) {}
 
     // Hash Password and Check Password
     async hashPassword(password) {
@@ -47,22 +45,22 @@ export class UserService {
             entity.lastName = createDto.lastName
             entity.email = createDto.email
             entity.phone = createDto.phone
-            await this.entityManager.persist(entity).flush()
+            await this.em.persist(entity).flush()
 
             entity.password = "<hidden>"
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error("Error:", err)
             throw new BadRequestException({
-                status: 400,
-                message: "",
+                statusCode: 400,
                 error: err.sqlMessage,
+                message: "",
             })
         }
     }
 
     async findAll() {
-        const list = await this.entityManager.findAll(BaseUser, { populate: ["organization", "roles", "groups"] })
+        const list = await this.em.findAll(BaseUser)
         list.forEach((data) => {
             data.password = "<hidden>"
         })
@@ -70,64 +68,57 @@ export class UserService {
         return new ResponseBody(200, list)
     }
 
-    async findOne(uuid: string) {
+    async findOne(id: number) {
         try {
-            const entity = await this.entityManager.findOneOrFail(BaseUser, { uuid: uuid })
+            const entity = await this.em.findOneOrFail(BaseUser, { id: id })
             entity.password = "<hidden>"
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error("Error:", err)
-            throw new NotFoundException(`Data #uuid: ${uuid} Not Found`)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
         }
     }
 
-    async update(uuid: string, updateDto: UpdateUserDto) {
+    async update(id: number, updateDto: UpdateUserDto) {
         try {
-            const entity = await this.entityManager.findOneOrFail(BaseUser, { uuid: uuid })
+            const entity = await this.em.findOneOrFail(BaseUser, { id: id })
 
             if (updateDto.password != "") {
                 const hashPassword = await this.hashPassword(updateDto.password)
                 updateDto.password = hashPassword
             }
 
-            // this.entityManager.assign(entity, updateDto, { mergeObjectProperties: true })
-            await this.entityManager.flush()
+            // this.em.assign(entity, updateDto, { mergeObjectProperties: true })
+            await this.em.flush()
             entity.password = "<hidden>"
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error("Error:", err)
-            throw new NotFoundException(`Data #uuid: ${uuid} Not Found`)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
         }
     }
 
-    async delete(uuid: string) {
+    async remove(id: number) {
         try {
-            const entity = await this.entityManager.findOneOrFail(BaseUser, { uuid: uuid })
-
-            // Soft Delete
-            // entity.deletedBy = "User Service"
-            entity.deletedDate = new Date()
-
-            // Hard Delete
-            // this.entityManager.remove(entity)
-
-            await this.entityManager.flush()
+            const entity = await this.em.findOneOrFail(BaseUser, { id: id })
+            this.em.remove(entity)
+            await this.em.flush()
             entity.password = "<hidden>"
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error("Error:", err)
-            throw new NotFoundException(`Data #uuid: ${uuid} Not Found`)
+            throw new NotFoundException(`Data #id:${id} Not Found`)
         }
     }
 
     // Authen Service
     async findByUsername(username: string) {
         try {
-            const entity = await this.entityManager.findOneOrFail(BaseUser, { username: username }, { populate: ["organization", "roles", "groups"] })
+            const entity = await this.em.findOneOrFail(BaseUser, { username: username }, { populate: ["organization", "roles", "groups"] })
             return entity
         } catch (err) {
             console.error("Error:", err)
-            throw new NotFoundException(`Data #username: ${username} Not Found`)
+            return null
         }
     }
 }

@@ -11,15 +11,15 @@ import { EntityManager } from "@mikro-orm/core"
 import { InjectEntityManager } from "@mikro-orm/nestjs"
 import { v4 as uuidv4 } from "uuid"
 
-import { _Role } from "./entity/role.entity"
-import { RoleCreateDto } from "./dto/role-create.dto"
-import { RoleUpdateDto } from "./dto/role-update.dto"
-import { _Group } from "./entity/group.entity"
-import { GroupCreateDto } from "./dto/group-create.dto"
-import { GroupUpdateDto } from "./dto/group-update.dto"
-import { _Organization } from "./entity/organization.entity"
-import { OrganizationCreateDto } from "./dto/org-create.dto"
-import { OrganizationUpdateDto } from "./dto/org-update.dto"
+import { BaseRole } from "../user/entities/role.entity"
+import { CreateRoleDto } from "../user/dto/create-role.dto"
+import { UpdateRoleDto } from "../user/dto/update-role.dto"
+import { BaseGroup } from "../user/entities/group.entity"
+import { CreateGroupDto } from "../user/dto/create-group.dto"
+import { UpdateGroupDto } from "../user/dto/update-group.dto"
+import { BaseOrganization } from "../user/entities/organization.entity"
+import { CreateOrganizationDto } from "../user/dto/create-organization.dto"
+import { UpdateOrganizationDto } from "../user/dto/update-organization.dto"
 
 @Injectable()
 export class AuthService {
@@ -97,9 +97,9 @@ export class AuthService {
     // async register() {}
 
     // Roles
-    async createRole(createDto: RoleCreateDto, user: UserDto) {
+    async createRole(createDto: CreateRoleDto, user: UserDto) {
         try {
-            const entity: _Role = new _Role()
+            const entity: BaseRole = new BaseRole()
             entity.uuid = uuidv4()
             entity.name = createDto.name
             if (createDto.description) {
@@ -122,14 +122,14 @@ export class AuthService {
     }
 
     async findAllRole() {
-        const list = await this.em.findAll(_Role)
+        const list = await this.em.findAll(BaseRole)
         console.log(list)
         return new ResponseBody(200, list)
     }
 
     async findOneRole(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(_Role, { id: id })
+            const entity = await this.em.findOneOrFail(BaseRole, { id: id })
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error("Error:", err)
@@ -137,10 +137,10 @@ export class AuthService {
         }
     }
 
-    async updateRole(id: number, updateEntity: RoleUpdateDto, user: UserDto) {
+    async updateRole(id: number, updateEntity: UpdateRoleDto, user: UserDto) {
         try {
-            const entity = await this.em.findOneOrFail(_Role, { id: id })
-            entity.updatedBy = user.uuid
+            const entity = await this.em.findOneOrFail(BaseRole, { id: id })
+            // entity.updatedBy = user.uuid
 
             this.em.assign(entity, updateEntity, { mergeObjectProperties: true })
             await this.em.flush()
@@ -161,8 +161,8 @@ export class AuthService {
 
     async removeRole(id: number, user: UserDto) {
         try {
-            const entity = await this.em.findOneOrFail(_Role, { id: id })
-            entity.updatedBy = user.uuid
+            const entity = await this.em.findOneOrFail(BaseRole, { id: id })
+            // entity.updatedBy = user.uuid
 
             this.em.remove(entity)
             await this.em.flush()
@@ -174,9 +174,9 @@ export class AuthService {
     }
 
     // Groups
-    async createGroup(createDto: GroupCreateDto, user: UserDto) {
+    async createGroup(createDto: CreateGroupDto, user: UserDto) {
         try {
-            const entity: _Group = new _Group()
+            const entity: BaseGroup = new BaseGroup()
             entity.uuid = uuidv4()
             entity.name = createDto.name
             if (createDto.description) {
@@ -199,14 +199,14 @@ export class AuthService {
     }
 
     async findAllGroup() {
-        const list = await this.em.findAll(_Group)
+        const list = await this.em.findAll(BaseGroup)
         console.log(list)
         return new ResponseBody(200, list)
     }
 
     async findOneGroup(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(_Group, { id: id })
+            const entity = await this.em.findOneOrFail(BaseGroup, { id: id })
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error("Error:", err)
@@ -214,9 +214,9 @@ export class AuthService {
         }
     }
 
-    async updateGroup(id: number, updateEntity: GroupUpdateDto, user: UserDto) {
+    async updateGroup(id: number, updateEntity: UpdateGroupDto, user: UserDto) {
         try {
-            const entity = await this.em.findOneOrFail(_Group, { id: id })
+            const entity = await this.em.findOneOrFail(BaseGroup, { id: id })
             this.em.assign(entity, updateEntity, { mergeObjectProperties: true })
             await this.em.flush()
             return new ResponseBody(200, entity)
@@ -235,8 +235,8 @@ export class AuthService {
 
     async removeGroup(id: number, user: UserDto) {
         try {
-            const entity = await this.em.findOneOrFail(_Group, { id: id })
-            entity.updatedBy = user.uuid
+            const entity = await this.em.findOneOrFail(BaseGroup, { id: id })
+            // entity.updatedBy = user.uuid
 
             this.em.remove(entity)
             await this.em.flush()
@@ -248,9 +248,9 @@ export class AuthService {
     }
 
     // Organization
-    async createOrg(createDto: OrganizationCreateDto, user: UserDto) {
+    async createOrg(createDto: CreateOrganizationDto, user: UserDto) {
         try {
-            const entity: _Organization = new _Organization()
+            const entity: BaseOrganization = new BaseOrganization()
             entity.uuid = uuidv4()
             entity.name = createDto.name
             if (createDto.description) {
@@ -273,14 +273,14 @@ export class AuthService {
     }
 
     async findAllOrg() {
-        const list = await this.em.findAll(_Organization)
+        const list = await this.em.findAll(BaseOrganization)
         console.log(list)
         return new ResponseBody(200, list)
     }
 
     async findOneOrg(id: number) {
         try {
-            const entity = await this.em.findOneOrFail(_Organization, { id: id })
+            const entity = await this.em.findOneOrFail(BaseOrganization, { id: id })
             return new ResponseBody(200, entity)
         } catch (err) {
             console.error("Error:", err)
@@ -288,11 +288,11 @@ export class AuthService {
         }
     }
 
-    async updateOrg(id: number, updateEntity: OrganizationUpdateDto, user: UserDto) {
+    async updateOrg(id: number, updateEntity: UpdateOrganizationDto, user: UserDto) {
         try {
-            const entity = await this.em.findOneOrFail(_Organization, { id: id })
-            entity.updatedBy = user.uuid
-            
+            const entity = await this.em.findOneOrFail(BaseOrganization, { id: id })
+            // entity.updatedBy = user.uuid
+
             this.em.assign(entity, updateEntity, { mergeObjectProperties: true })
             await this.em.flush()
             return new ResponseBody(200, entity)
@@ -311,9 +311,9 @@ export class AuthService {
 
     async removeOrg(id: number, user: UserDto) {
         try {
-            const entity = await this.em.findOneOrFail(_Organization, { id: id })
+            const entity = await this.em.findOneOrFail(BaseOrganization, { id: id })
             this.em.remove(entity)
-            entity.updatedBy = user.uuid
+            // entity.updatedBy = user.uuid
 
             await this.em.flush()
             return new ResponseBody(200, entity)

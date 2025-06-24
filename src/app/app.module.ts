@@ -14,7 +14,6 @@ import { MikroOrmModule } from "@mikro-orm/nestjs"
 import { BaseModule } from "src/base/base.module"
 import serverConfig from "src/config/server.config"
 
-
 @Module({
     imports: [
         // Config Environment
@@ -22,32 +21,23 @@ import serverConfig from "src/config/server.config"
             cache: false,
             isGlobal: true,
             expandVariables: true,
-            envFilePath: ['src/environments/local.env'],
-            load: [
-                serverConfig,
-                reportConfig
-            ]
+            envFilePath: ["src/environments/local.env"],
+            load: [serverConfig, reportConfig],
         }),
 
         // ----- Database -----
-        // For Single Database
-        // MikroOrmModule.forRoot(databaseConfig.sampleConfig),
-
         // For Multiple Database
-        MikroOrmModule.forRoot(databaseConfig.mainConfig),
-        MikroOrmModule.forRoot(databaseConfig.secondConfig),
+        MikroOrmModule.forRoot(databaseConfig.postgreSqlConfig),
+        // MikroOrmModule.forRoot(databaseConfig.mariaDbConfig),
         MikroOrmModule.forMiddleware(),
 
         // ----- Base Module -----
         BaseModule,
 
         // ----- Project Module -----
+        
     ],
-    controllers: [
-        AppController
-    ],
-    providers: [
-        AppService,
-    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {}

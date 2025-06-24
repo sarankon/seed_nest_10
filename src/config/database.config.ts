@@ -1,46 +1,19 @@
-import { Options } from "@mikro-orm/core"
-import { MariaDbDriver } from "@mikro-orm/mariadb"
-import { MikroOrmModuleSyncOptions } from "@mikro-orm/nestjs"
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection"
-import { SqliteDriver } from "@mikro-orm/sqlite"
+import { MikroOrmModuleSyncOptions } from "@mikro-orm/nestjs"
 
-const sampleConfig: Options = {
-    // for simplicity, we use the SQLite database, as it's available pretty much everywhere
-    driver: SqliteDriver,
-    dbName: "./db/mikro.sqlite",
+import { MariaDbDriver } from "@mikro-orm/mariadb"
+import { PostgreSqlDriver } from "@mikro-orm/postgresql"
 
-    // folder-based discovery setup, using common filename suffix
-    entities: ["./dist/**/*.entity.js"],
-    entitiesTs: ["./src/**/*.entity.ts"],
-
-    // we will use the ts-morph reflection, an alternative to the default reflect-metadata provider
-    // check the documentation for their differences: https://mikro-orm.io/docs/metadata-providers
-    metadataProvider: TsMorphMetadataProvider,
-
-    // enable debug mode to log SQL queries and discovery information
-    debug: true,
-    
-    // seed file
-    seeder: {
-        path: "./dist/config/seeds", // path to the folder with seeders
-        pathTs: "./src/config/seeds", // path to the folder with TS seeders (if used, we should put path to compiled files in `path`)
-        defaultSeeder: "DatabaseSeeder", // default seeder class name
-        glob: "!(*.d).{js,ts}", // how to match seeder files (all .js and .ts files, but not .d.ts)
-        emit: "ts", // seeder generation mode
-        fileName: (className: string) => className, // seeder file naming convention
-    },
-}
-
-const contextMain: MikroOrmModuleSyncOptions = {
-    contextName: "main",
+const postgreSqlConfig: MikroOrmModuleSyncOptions = {
+    contextName: "postgreSql",
     registerRequestContext: false,
 
-    driver: MariaDbDriver,
+    driver: PostgreSqlDriver,
     host: "localhost",
-    port: 13306,
-    dbName: "seed",
-    user: "seed",
-    password: "password",
+    port: 5432,
+    dbName: "seedDatabase",
+    user: "seedUser",
+    password: "seedPassword",
 
     autoLoadEntities: true,
     entities: ["./dist/**/*.entity.js"],
@@ -50,16 +23,16 @@ const contextMain: MikroOrmModuleSyncOptions = {
     debug: true,
 }
 
-const contextSecond: MikroOrmModuleSyncOptions = {
-    contextName: "second",
+const mariaDbConfig: MikroOrmModuleSyncOptions = {
+    contextName: "mariaDb",
     registerRequestContext: false,
 
     driver: MariaDbDriver,
     host: "localhost",
-    port: 23306,
-    dbName: "seed",
-    user: "seed",
-    password: "password",
+    port: 3306,
+    dbName: "seedDatabase",
+    user: "seedUser",
+    password: "seedPassword",
 
     autoLoadEntities: true,
     entities: ["./dist/**/*.entity.js"],
@@ -70,9 +43,8 @@ const contextSecond: MikroOrmModuleSyncOptions = {
 }
 
 const databaseConfig = {
-    sampleConfig: sampleConfig,
-    mainConfig: contextMain,
-    secondConfig: contextSecond,
+    postgreSqlConfig: postgreSqlConfig,
+    mariaDbConfig: mariaDbConfig,
 }
 
 export default databaseConfig

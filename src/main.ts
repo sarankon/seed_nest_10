@@ -1,10 +1,11 @@
 import { NestFactory } from "@nestjs/core"
-import { AppModule } from "./app/app.module"
-// import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from "@nestjs/swagger"
 import { NestExpressApplication } from "@nestjs/platform-express"
+// import { NestFastifyApplication } from '@nestjs/platform-fastify'
+import { DocumentBuilder, SwaggerDocumentOptions, SwaggerModule } from "@nestjs/swagger"
+
 import { join } from "path"
 
+import { AppModule } from "./app/app.module"
 import serverConfig from "./config/server.config"
 
 async function bootstrap() {
@@ -12,9 +13,15 @@ async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule)
     // const app = await NestFactory.create<NestFastifyApplication>(AppModule);
 
+    // Enable CORS (Cross-Origin Resource Sharing)
+    // This allows the API to be accessed from different origins (e.g., frontend applications)
     app.enableCors()
+
+    // Static Assets (Public Directory for Serving Files)
     app.useStaticAssets(join(__dirname, "..", "public"))
 
+    // Setup Swagger for API Documentation
+    // Swagger is a tool that helps document and test APIs
     const config = new DocumentBuilder()
         .setTitle("Seed Nest 10 (Example)")
         .setDescription("Seed Nest API Description")
@@ -23,6 +30,8 @@ async function bootstrap() {
         .addBasicAuth()
         .addBearerAuth()
         .build()
+    
+    // SwaggerDocumentOptions allows customization of the Swagger document
     const options: SwaggerDocumentOptions = {
         operationIdFactory: (controllerKey: string, methodKey: string) => {
             const controllerName = controllerKey.replace("Controller", "").toLowerCase()
@@ -37,6 +46,8 @@ async function bootstrap() {
             }
         }
     }
+
+    // Create the Swagger document using the configuration and options
     const documentFactory = () => SwaggerModule.createDocument(app, config, options)
     SwaggerModule.setup("swagger", app, documentFactory)
 

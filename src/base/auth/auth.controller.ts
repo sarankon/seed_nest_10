@@ -11,10 +11,10 @@ import { Role } from "./role/role.enum"
 
 import { CreateUserDto } from "../user/dto/create-user.dto"
 import { UserLoginDto } from "./dto/login-user.dto"
-import { OrganizationCreateDto } from "./dto/org-create.dto"
-import { RoleCreateDto } from "./dto/role-create.dto"
-import { GroupCreateDto } from "./dto/group-create.dto"
-import { RoleUpdateDto } from "./dto/role-update.dto"
+import { CreateOrganizationDto } from "../user/dto/create-organization.dto"
+import { CreateRoleDto } from "../user/dto/create-role.dto"
+import { CreateGroupDto } from "../user/dto/create-group.dto"
+import { UpdateRoleDto } from "../user/dto/update-role.dto"
 // import { UserLogoutDto } from "./dto/logout-user.dto"
 
 @Controller("auth")
@@ -83,7 +83,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post("role")
     @ApiBearerAuth()
-    createRole(@Body() createDto: RoleCreateDto, @Request() request) {
+    createRole(@Body() createDto: CreateRoleDto, @Request() request) {
         // console.log('User: ', request.user)
         return this.authService.createRole(createDto, request.user)
     }
@@ -105,7 +105,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Patch("role/:id")
     @ApiBearerAuth()
-    updateRole(@Param("id") id: string, @Body() updateDto: RoleUpdateDto, @Request() request) {
+    updateRole(@Param("id") id: string, @Body() updateDto: UpdateRoleDto, @Request() request) {
         return this.authService.updateRole(parseInt(id), updateDto, request.user)
     }
 
@@ -120,7 +120,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post("group")
     @ApiBearerAuth()
-    createGroup(@Body() createDto: GroupCreateDto, @Request() request) {
+    createGroup(@Body() createDto: CreateGroupDto, @Request() request) {
         // console.log('User: ', request.user)
         return this.authService.createGroup(createDto, request.user)
     }
@@ -142,7 +142,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Patch("group/:id")
     @ApiBearerAuth()
-    updateGroup(@Param("id") id: string, @Body() updateDto: RoleUpdateDto, @Request() request) {
+    updateGroup(@Param("id") id: string, @Body() updateDto: UpdateRoleDto, @Request() request) {
         return this.authService.updateGroup(parseInt(id), updateDto, request.user)
     }
 
@@ -157,7 +157,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post("organization")
     @ApiBearerAuth()
-    createOrg(@Body() createDto: OrganizationCreateDto, @Request() request) {
+    createOrg(@Body() createDto: CreateOrganizationDto, @Request() request) {
         // console.log('User: ', request.user)
         return this.authService.createOrg(createDto, request.user)
     }
@@ -179,7 +179,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Patch("organization/:id")
     @ApiBearerAuth()
-    updateOrg(@Param("id") id: string, @Body() updateDto: RoleUpdateDto, @Request() request) {
+    updateOrg(@Param("id") id: string, @Body() updateDto: UpdateRoleDto, @Request() request) {
         return this.authService.updateOrg(parseInt(id), updateDto, request.user)
     }
 

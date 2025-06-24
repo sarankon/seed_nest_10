@@ -1,18 +1,18 @@
 export class ResponseBody {
-    statusCode!: number
-    message!: Status
+    status!: number
+    message!: Message
     data!: unknown
 
-    constructor(statusCode, data) {
-        this.statusCode = statusCode
+    constructor(status, data) {
+        this.status = status
         this.data = data
 
-        if (this.statusCode == 200) {
-            this.message = Status.success
+        if (this.status == 200) {
+            this.message = Message.success
         }
     }
 }
 
-enum Status {
+enum Message {
     success = "success",
 }
