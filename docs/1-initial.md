@@ -31,17 +31,19 @@ npm install @nestjs/platform-fastify
 ```
 Edit file :page_with_curl: main.ts
 ``` ts
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
+import { NestFactory } from "@nestjs/core"
+import { NestExpressApplication } from "@nestjs/platform-express"
+import { NestFastifyApplication } from "@nestjs/platform-fastify"
+import { AppModule } from "./app.module"
 
 async function bootstrap() {
   // const app = await NestFactory.create(AppModule);
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule);
+  // const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule)
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000)
 }
-bootstrap();
+bootstrap()
 ```
 
 # Install Swagger (OpenAPI)
@@ -52,25 +54,27 @@ npm install --save @nestjs/swagger
 Edit file :page_with_curl: main.ts
 ``` ts
 // ...
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from "@nestjs/swagger"
 
 async function bootstrap() {
   // const app = await NestFactory.create(AppModule);
   const app = await NestFactory.create<NestFastifyApplication>(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Seed Nest 10 (Example)')
-    .setDescription('Seed Nest API Description')
-    .setVersion('1.0')
+    .setTitle("Seed Nest 10")
+    .setDescription("Seed Nest API Description")
+    .setVersion("1.0")
+    .addBasicAuth()
     .addBearerAuth()
-    .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger', app, documentFactory);
+    .build()
+  const options = SwaggerDocumentOptions = {}
+  const documentFactory = () => SwaggerModule.createDocument(app, config, options)
+  SwaggerModule.setup("swagger", app, documentFactory)
   
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000)
 }
-bootstrap();
+bootstrap()
 ```
 Swagger UI: http://localhost:3000/swagger <br />
 Generate JSON: http://localhost:3000/swagger-json
@@ -81,7 +85,7 @@ Generate JSON: http://localhost:3000/swagger-json
 // http://localhost:3000/swagger/json
 SwaggerModule.setup('api', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
-});
+})
 ```
 
 # Config
