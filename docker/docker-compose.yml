@@ -1,79 +1,35 @@
-#version: "3"
+# version: '3.4'
 name: seed
 services:
 
-  # service-api:
-  #   image: node:20
-  #   container_name: seed-service-api
-  #   restart: always
-  #   networks:
-  #     - seed
-  #   ports:
-  #     - 80:3000
-  #   volumes:
-  #     - ..\\dist:/home/seed
-
-  mariadb-main:
-    image: mariadb:10
-    container_name: seed-database-main
+  postgres:
+    image: postgres:${POSTGRES_VERSION_TAG}
     restart: always
-    networks:
-      - seed
-    ports:
-      - 13306:3306
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
     volumes:
-      # - /home/lanmuang/database/main:/var/lib/mysql:Z
-      # - D:\\Docker\\Volumes\lanmuang\database\main:/var/lib/mysql:Z
-      - volume_db_main:/var/lib/mysql:Z
-    environment:
-      - MARIADB_DATABASE=seed
-      - MARIADB_ROOT_PASSWORD=root
-      - MARIADB_USER=seed
-      - MARIADB_PASSWORD=password
-
-  mariadb-second:
-    image: mariadb:10
-    container_name: seed-database-second
-    restart: always
+      - ./data:/var/lib/postgresql/data
     networks:
-      - seed
+      - default
     ports:
-      - 23306:3306
-    volumes:
-      # - /home/lanmuang/database/second:/var/lib/mysql:Z
-      # - D:\\Docker\\Volumes\lanmuang\database\second:/var/lib/mysql:Z
-      - volume_db_second:/var/lib/mysql:Z
-    environment:
-      - MARIADB_DATABASE=seed
-      - MARIADB_ROOT_PASSWORD=root
-      - MARIADB_USER=seed
-      - MARIADB_PASSWORD=password
+      - 5432:5432
 
-  phpmyadmin:
-    image: phpmyadmin:5
-    container_name: seed-phpmyadmin
+  pgadmin4:
+    image: elestio/pgadmin:${PGADMIN_VERSION_TAG}
     restart: always
-    networks:
-      - seed
-    ports:
-      - 8080:80
     environment:
-      - PMA_ARBITRARY=0
-      - PMA_VERBOSES=Main Database,Second Database
-      - PMA_HOSTS=seed-database-main,seed-database-second
-      - PMA_PORTS=3306,3306
-      - PMA_USER=seed
-      - PMA_PASSWORD=password
-
-volumes:
-  volume_api:
-    name: seed-volume-api
-  volume_db_main:
-    name: seed-volume-db-main
-  volume_db_second:
-    name: seed-volume-db-second
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+      - PGADMIN_LISTEN_PORT=8080
+    networks:
+      - default
+    ports:
+      - "8080:8080"
 
 networks:
-  seed:
-    name: seed-network-bridge
+  default:
+    name: seed-network
     driver: bridge
