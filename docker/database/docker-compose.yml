@@ -17,7 +17,7 @@ services:
     ports:
       - 5432:5432
 
-  pgadmin4:
+  pgadmin:
     image: elestio/pgadmin:${PGADMIN_VERSION_TAG}
     restart: always
     environment:
