@@ -11,6 +11,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     // Using Logger to log messages with timestamps
     private readonly logger = new Logger(LocalStrategy.name, { timestamp: true })
 
+    // Constructor
     constructor(private readonly userService: UserService) {
         super()
         this.logger.log("LocalStrategy initialized")

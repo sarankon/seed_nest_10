@@ -9,8 +9,11 @@ import jwtConfig from "src/config/jwt.config"
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+    // Logger
+    // Using Logger to log messages with timestamps
     private readonly logger = new Logger(JwtStrategy.name, { timestamp: true })
 
+    // Constructor
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
