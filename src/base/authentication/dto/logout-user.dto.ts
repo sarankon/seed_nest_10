@@ -1,3 +1,3 @@
-export class UserLogoutDto {
+export class LogoutUserDto {
     username!: string
 }

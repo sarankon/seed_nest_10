@@ -17,38 +17,38 @@ export class RoleController {
     constructor(private readonly roleService: RoleService) {}
 
     // Basic Role Management
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("create")
     create(@Body() createRoleDto: CreateRoleDto, @Request() request) {
         return this.roleService.create(createRoleDto, request.user)
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("find-all")
     findAll(@Request() request) {
         return this.roleService.findAll()
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("find")
     findOne(@Body() updateRoleDto: UpdateRoleDto, @Request() request) {
-        return this.roleService.findOne(updateRoleDto.id)
+        // return this.roleService.findOne(updateRoleDto.id)
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("update")
     update(@Body() updateRoleDto: UpdateRoleDto, @Request() request) {
-        return this.roleService.update(updateRoleDto.id, updateRoleDto, request.user)
+        // return this.roleService.update(updateRoleDto.id, updateRoleDto, request.user)
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("delete")
     delete(@Body() updateRoleDto: UpdateRoleDto, @Request() request) {
-        return this.roleService.delete(updateRoleDto.id, request.user)
+        // return this.roleService.delete(updateRoleDto.id, request.user)
     }
 }

@@ -12,27 +12,30 @@ import { Roles } from "./role/roles.decorator"
 import { Role } from "./role/role.enum"
 
 // Data Transfer Object (DTO) for User Login
-import { UserLoginDto } from "./dto/login-user.dto"
+import { LoginUserDto } from "./dto/login-user.dto"
 
 @Injectable()
 @Controller("authentication")
 export class AuthenticationController {
+    // Logger
+    // Using Logger to log messages with timestamps
     private readonly logger = new Logger(AuthenticationController.name, { timestamp: true })
 
-    constructor(private readonly authService: AuthenticationService) {
+    // Constructor
+    constructor(private readonly authenticationService: AuthenticationService) {
         this.logger.log("AuthenticationController initialized")
     }
 
     // Login User
     // This endpoint is used to log in the user and generate a JWT token
-    @ApiBody({ type: UserLoginDto })
+    @ApiBody({ type: LoginUserDto })
     @UseGuards(LocalAuthGuard)
     @Post("login")
     login(@Request() request) {
         this.logger.log("User Login Request: " + request.user.username)
         this.logger.log("User Login Request: " + request.user.uuid)
 
-        return this.authService.login(request.user)
+        return this.authenticationService.login(request.user)
     }
 
     // Logout User
@@ -44,7 +47,7 @@ export class AuthenticationController {
         this.logger.log("User Logout Request: " + request.user.username)
         this.logger.log("User Logout Request: " + request.user.uuid)
 
-        return this.authService.logout()
+        return this.authenticationService.logout()
     }
 
     // Refresh Token
@@ -56,7 +59,7 @@ export class AuthenticationController {
         this.logger.log("User Refresh Token Request: " + request.user.username)
         this.logger.log("User Refresh Token Request: " + request.user.uuid)
 
-        return this.authService.refreshToken()
+        return this.authenticationService.refreshToken()
     }
 
     // Check User Authentication
@@ -67,27 +70,27 @@ export class AuthenticationController {
         this.logger.log("Check User Authentication: " + request.user.username)
         this.logger.log("Check User Authentication: " + request.user.uuid)
 
-        return this.authService.isAuthenticated()
+        return this.authenticationService.isAuthenticated()
     }
 
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
-    @Post("info")
+    @Post("infoUser")
     infoUser(@Request() request) {
         this.logger.log("User Info Request: " + request.user.username)
         this.logger.log("User Info Request: " + request.user.uuid)
 
-        return request.user
+        return this.authenticationService.infoUser(request.user)
     }
 
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @Roles(Role.Admin)
-    @Post("admin")
+    @Post("infoAdmin")
     infoAdmin(@Request() request) {
         this.logger.log("Admin Info Request: " + request.user.username)
         this.logger.log("Admin Info Request: " + request.user.uuid)
 
-        return request.user
+        return this.authenticationService.infoAdmin(request.user)
     }
 }

@@ -1,5 +1,5 @@
 export class CreateGroupDto {
-    id?: number
+    uuid?: string
     name?: string
     description?: string
 }

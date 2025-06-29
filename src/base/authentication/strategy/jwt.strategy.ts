@@ -1,10 +1,16 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, Logger } from "@nestjs/common"
 import { PassportStrategy } from "@nestjs/passport"
+
+// Passport JWT Strategy
 import { ExtractJwt, Strategy } from "passport-jwt"
-import jwtConfig from "../../../config/jwt.config"
+
+// JWT Configuration
+import jwtConfig from "src/config/jwt.config"
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+    private readonly logger = new Logger(JwtStrategy.name, { timestamp: true })
+
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -15,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     async validate(payload: any) {
         console.log("JwtStrategy: (validate) -> @Request request.user")
-        // console.log("payload:", payload)
+        console.log("payload:", payload)
         // payload['edited'] = 'from validate at JwtStrategy'
         return payload
     }

@@ -17,38 +17,38 @@ export class GroupController {
     constructor(private readonly groupService: GroupService) {}
 
     // Basic Group Management
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("create")
     create(@Body() createGroupDto: CreateGroupDto, @Request() request) {
         return this.groupService.create(createGroupDto, request.user)
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("find-all")
     findAll() {
         return this.groupService.findAll()
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("find")
     findOne(@Body() updateGroupDto: UpdateGroupDto, @Request() request) {
-        return this.groupService.findOne(updateGroupDto.id)
+        // return this.groupService.findOne(updateGroupDto.uuid)
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("update")
     update(@Body() updateGroupDto: UpdateGroupDto, @Request() request) {
-        return this.groupService.update(updateGroupDto.id, updateGroupDto, request.user)
+        // return this.groupService.update(updateGroupDto.id, updateGroupDto, request.user)
     }
 
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Post("delete")
     delete(@Body() updateGroupDto: UpdateGroupDto, @Request() request) {
-        return this.groupService.delete(updateGroupDto.id, request.user)
+        // return this.groupService.delete(updateGroupDto.id, request.user)
     }
 }

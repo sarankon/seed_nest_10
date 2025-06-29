@@ -1,5 +1,4 @@
-// This should be a real class/interface representing a user entity
-export class UserLoginDto {
+export class LoginUserDto {
     username!: string
     password!: string
 }

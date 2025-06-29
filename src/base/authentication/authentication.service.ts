@@ -1,55 +1,66 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
+import { Injectable, Logger } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
-import jwtConfig from "../../config/jwt.config"
 
 import { EntityManager, MikroORM } from "@mikro-orm/core"
 import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
+
+// UUID
+// Using v7 for UUID generation as per the latest standards
 import { v7 as uuidv7 } from "uuid"
 
-import { UserService } from "../user/user.service"
-import { UserDto } from "./dto/user.dto"
-// import { Role } from "./role/role.enum"
-import { ResponseBody } from "../response-body"
+// Configuration
+import jwtConfig from "src/config/jwt.config"
+
+// Services
+import { UserService } from "src/base/user/user.service"
+
+// Data Transfer Objects (DTOs)
+import { UserDto } from "src/base/authentication/dto/user.dto"
+import { ResponseBody } from "src/base/response-body"
 
 @Injectable()
 export class AuthenticationService {
+    // Logger
+    // Using Logger to log messages with timestamps
+    private readonly logger = new Logger(AuthenticationService.name, { timestamp: true })
+
     constructor(
-        private readonly userService: UserService,
         private readonly jwtService: JwtService,
         @InjectMikroORM("postgreSql") private readonly mikroOrm: MikroORM,
         @InjectEntityManager("postgreSql") private readonly entityManager: EntityManager,
-    ) {}
-
-    // Local Strategy (validate) -> validateUser
-    async validateUser(username: string, password: string) {
-        const user = await this.userService.findByUsername(username)
-        if (user) {
-            const isMatch = await this.userService.isMatchPassword(password, user.password)
-            console.log("isMatch: ", isMatch)
-
-            // If Match -> @Request
-            if (isMatch) {
-                return user
-            } else {
-                return null
-            }
-        } else {
-            return null
-        }
+    ) {
+        this.logger.log("AuthenticationService initialized")
     }
 
     // JWT Functionality
     async login(user: UserDto) {
-        // console.log('Login: ', user)
-        const roles: Array<string> = []
+        this.logger.log(`User Login Request: ${user.username}`)
+        this.logger.log(`User Login Request: ${user.uuid}`)
 
+        // Set User Roles, Groups, and Organization
+        // Initialize arrays for roles and groups, and a string for organization
+        const roles: Array<string> = []
+        const groups: Array<string> = []
+        let organization: string = ""
+
+        // Check if user has roles, groups, and organization
         if (user.roles) {
             for (const role of user.roles) {
-                // console.log(role['name'])
                 roles.push(role["name"])
             }
         }
 
+        if (user.groups) {
+            for (const group of user.groups) {
+                groups.push(group["name"])
+            }
+        }
+
+        if (user.organization) {
+            organization = user.organization["name"]
+        }
+
+        // Set Payload for JWT
         const payload = {
             uuid: user.uuid,
             username: user.username,
@@ -57,13 +68,24 @@ export class AuthenticationService {
             lastName: user.lastName,
             email: user.email,
             roles: roles,
+            groups: groups,
+            organization: organization,
+            tokenUuid: uuidv7(),
         }
 
+        // Generate JWT Token
+        const access_token = this.jwtService.sign(payload, {
+            expiresIn: jwtConfig.expiresIn,
+        })
+
+        // Generate Refresh Token
+        const refresh_token = this.jwtService.sign(payload, {
+            expiresIn: jwtConfig.expiresIn,
+        })
+
         const data = {
-            access_token: this.jwtService.sign(payload, {
-                expiresIn: jwtConfig.expiresIn,
-            }),
-            refresh_token: "",
+            access_token: access_token,
+            refresh_token: refresh_token,
         }
         return new ResponseBody(200, data)
     }
@@ -82,5 +104,15 @@ export class AuthenticationService {
     async refreshToken() {
         // Rotate Token
         return "Rotate"
+    }
+
+    async infoUser(user: UserDto) {
+        // User Info
+        return new ResponseBody(200, user)
+    }
+
+    async infoAdmin(user: UserDto) {
+        // Admin Info
+        return new ResponseBody(200, user)
     }
 }

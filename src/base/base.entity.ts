@@ -13,13 +13,13 @@ export abstract class BaseEntity {
     @Property({ columnType: "uuid", nullable: true })
     createdBy?: string
 
-    @Property({ columnType: "timestamp", nullable: true })
+    @Property({ columnType: "timestamp", nullable: true, onCreate: () => new Date() })
     createdDate?: Date
 
     @Property({ columnType: "uuid", nullable: true })
     updatedBy?: string
 
-    @Property({ columnType: "timestamp", nullable: true })
+    @Property({ columnType: "timestamp", nullable: true, onCreate: () => new Date(), onUpdate: () => new Date() })
     updatedDate?: Date
 
     @Property({ columnType: "uuid", nullable: true })
