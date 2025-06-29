@@ -1,7 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common"
 import { EntityManager, MikroORM } from "@mikro-orm/core"
 import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
 
+// UUID
+// Using UUID v7 for unique identifiers
 import { v7 as uuidv7 } from "uuid"
 
 // Entities
@@ -15,6 +17,10 @@ import { ResponseBody } from "src/base/response-body"
 
 @Injectable()
 export class OrganizationService {
+    // Logger
+    // Using Logger to log messages with timestamps
+    private readonly logger = new Logger(OrganizationService.name, { timestamp: true })
+
     // Constructor
     constructor(
         @InjectMikroORM("postgreSql") private readonly mikroOrm: MikroORM,

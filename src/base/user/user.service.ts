@@ -3,6 +3,7 @@ import { EntityManager, MikroORM } from "@mikro-orm/core"
 import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
 
 // UUID
+// Using UUID v7 for unique identifiers
 import { v7 as uuidv7 } from "uuid"
 
 // Bcrypt for Password Hashing
@@ -184,6 +185,10 @@ export class UserService {
         try {
             const user = await this.entityManager.findOne(BaseUser, { uuid: userDto.uuid }, { populate: ["organization", "roles", "groups"] })
             const entity = await this.entityManager.findOneOrFail(BaseUser, { uuid: uuid, organization: user.organization })
+
+            if (user.uuid !== entity.uuid && !user.roles.toArray().some((role) => role.name === Role.Admin)) {
+                throw new ForbiddenException(`You do not have permission to update this user`)
+            }
 
             // Soft Delete
             entity.updatedBy = user.uuid
