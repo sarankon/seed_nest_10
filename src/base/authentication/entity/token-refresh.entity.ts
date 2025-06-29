@@ -3,10 +3,10 @@ import { BaseEntity } from "src/base/base.entity"
 
 @Entity()
 export class TokenRefresh extends BaseEntity {
-    @Property({ columnType: "uuid", unique: "uuid" })
+    @Property({ columnType: "uuid", unique: true })
     uuid!: string
 
-    @Property({ columnType: "character varying(250)" })
+    @Property({ columnType: "character varying(50)" })
     ipAddress!: string
 
     @Property({ columnType: "timestamp" })

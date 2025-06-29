@@ -3,10 +3,10 @@ import { BaseEntity } from "src/base/base.entity"
 
 @Entity()
 export class BaseGroup extends BaseEntity {
-    @Property({ columnType: "uuid" })
+    @Property({ columnType: "uuid", unique: true })
     uuid!: string
 
-    @Property({ columnType: "character varying(100)" })
+    @Property({ columnType: "character varying(100)", unique: true })
     name!: string
 
     @Property({ columnType: "character varying(200)" })

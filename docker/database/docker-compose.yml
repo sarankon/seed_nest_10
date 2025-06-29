@@ -3,12 +3,12 @@ name: seed
 services:
 
   postgres:
-    image: postgres:${POSTGRES_VERSION_TAG}
+    image: postgres:17
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: seed_db
+      POSTGRES_USER: seed_user
+      POSTGRES_PASSWORD: seed_password
       PGDATA: /var/lib/postgresql/data
     volumes:
       - ./data:/var/lib/postgresql/data
@@ -17,17 +17,25 @@ services:
     ports:
       - 5432:5432
 
-  pgadmin:
-    image: elestio/pgadmin:${PGADMIN_VERSION_TAG}
+  adminer:
+    image: adminer:5
     restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
-      - PGADMIN_LISTEN_PORT=8080
     networks:
       - default
     ports:
-      - "8080:8080"
+      - 8080:8080
+
+  # pgadmin:
+  #   image: elestio/pgadmin:REL-9_4
+  #   restart: always
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=admin@seed.com
+  #     - PGADMIN_DEFAULT_PASSWORD=admin_seed
+  #     - PGADMIN_LISTEN_PORT=8080
+  #   networks:
+  #     - default
+  #   ports:
+  #     - "8080:8080"
 
 networks:
   default:

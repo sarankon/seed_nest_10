@@ -7,7 +7,6 @@ import { ROLES_KEY } from "./roles.decorator"
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-
     constructor(
         private readonly reflector: Reflector,
         private readonly jwtService: JwtService,
@@ -17,10 +16,7 @@ export class RolesGuard implements CanActivate {
 
     canActivate(context: ExecutionContext): boolean {
         console.log("RolesGuard: canActivate")
-        const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
-            context.getHandler(), 
-            context.getClass()
-        ])
+        const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [context.getHandler(), context.getClass()])
 
         console.log("Request Role: ", requiredRoles)
         if (!requiredRoles) {
@@ -29,18 +25,18 @@ export class RolesGuard implements CanActivate {
         }
 
         const request = context.switchToHttp().getRequest()
-        const authorization = request.header('Authorization');
+        const authorization = request.header("Authorization")
         console.log("authorization: ", authorization)
-        if(!authorization) {
-            throw new UnauthorizedException('Authorization: Bearer <token> header missing')
+        if (!authorization) {
+            throw new UnauthorizedException("Authorization: Bearer <token> header missing")
         }
 
-        const parts = authorization.split(' ');
-        if (parts.length !== 2 || parts[0] !== 'Bearer') {
-            throw new UnauthorizedException('Authorization: Bearer <token> header missing')
+        const parts = authorization.split(" ")
+        if (parts.length !== 2 || parts[0] !== "Bearer") {
+            throw new UnauthorizedException("Authorization: Bearer <token> header missing")
         }
 
-        const token = parts[1];
+        const token = parts[1]
         const user = this.jwtService.decode(token)
         console.log("user: ", user)
 

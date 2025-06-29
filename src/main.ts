@@ -1,7 +1,11 @@
 import { NestFactory } from "@nestjs/core"
 import { NestExpressApplication } from "@nestjs/platform-express"
 // import { NestFastifyApplication } from '@nestjs/platform-fastify'
-import { DocumentBuilder, SwaggerDocumentOptions, SwaggerModule } from "@nestjs/swagger"
+import {
+    DocumentBuilder,
+    SwaggerDocumentOptions,
+    SwaggerModule,
+} from "@nestjs/swagger"
 
 import { join } from "path"
 
@@ -10,8 +14,12 @@ import serverConfig from "./config/server.config"
 
 async function bootstrap() {
     // const app = await NestFactory.create(AppModule)
-    const app = await NestFactory.create<NestExpressApplication>(AppModule)
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+        logger: ["error", "warn", "log", "debug", "verbose"],
+    })
     // const app = await NestFactory.create<NestFastifyApplication>(AppModule);
+
+    // app.useLogger(["error", "warn", "log", "debug", "verbose"])
 
     // Enable CORS (Cross-Origin Resource Sharing)
     // This allows the API to be accessed from different origins (e.g., frontend applications)
@@ -30,25 +38,28 @@ async function bootstrap() {
         .addBasicAuth()
         .addBearerAuth()
         .build()
-    
+
     // SwaggerDocumentOptions allows customization of the Swagger document
     const options: SwaggerDocumentOptions = {
         operationIdFactory: (controllerKey: string, methodKey: string) => {
-            const controllerName = controllerKey.replace("Controller", "").toLowerCase()
-            switch(controllerName) {
-                case 'auth' :
+            const controllerName = controllerKey
+                .replace("Controller", "")
+                .toLowerCase()
+            switch (controllerName) {
+                case "auth":
                     // return controllerName + "_" + methodKey
                     return methodKey
-                case 'upload':
+                case "upload":
                     return methodKey
                 default:
                     return methodKey + "_" + controllerName
             }
-        }
+        },
     }
 
     // Create the Swagger document using the configuration and options
-    const documentFactory = () => SwaggerModule.createDocument(app, config, options)
+    const documentFactory = () =>
+        SwaggerModule.createDocument(app, config, options)
     SwaggerModule.setup("swagger", app, documentFactory)
 
     await app.listen(process.env.PORT ?? serverConfig().port)

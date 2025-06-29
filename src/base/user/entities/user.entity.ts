@@ -6,26 +6,26 @@ import { BaseOrganization } from "src/base/user/entities/organization.entity"
 
 @Entity()
 export class BaseUser extends BaseEntity {
-    @Property({ columnType: "uuid", unique: "uuid" })
+    @Property({ columnType: "uuid" })
     uuid!: string
 
-    @Property({ columnType: "character varying(250)", unique: "username" })
+    @Property({ columnType: "character varying(50)", unique: true })
     username!: string
 
-    @Property({ columnType: "character varying(250)" })
+    @Property({ columnType: "character varying(200)" })
     password!: string
 
     // Basic Profile
-    @Property({ columnType: "character varying(250)", nullable: true })
+    @Property({ columnType: "character varying(100)", nullable: true })
     firstName?: string
 
-    @Property({ columnType: "character varying(250)", nullable: true })
+    @Property({ columnType: "character varying(100)", nullable: true })
     lastName?: string
 
-    @Property({ columnType: "character varying(250)", nullable: true, unique: "email" })
+    @Property({ columnType: "character varying(100)", nullable: true, unique: true })
     email?: string
 
-    @Property({ columnType: "character varying(250)", nullable: true })
+    @Property({ columnType: "character varying(50)", nullable: true })
     phone?: string
 
     // Roles, Groups, Organization

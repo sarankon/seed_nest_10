@@ -1,4 +1,5 @@
 export class CreateRoleDto {
-    name!: string
+    id?: number
+    name?: string
     description?: string
 }

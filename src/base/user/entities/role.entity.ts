@@ -3,10 +3,10 @@ import { BaseEntity } from "src/base/base.entity"
 
 @Entity()
 export class BaseRole extends BaseEntity {
-    @Property({ columnType: "uuid", unique: "uuid" })
+    @Property({ columnType: "uuid", unique: true })
     uuid!: string
 
-    @Property({ columnType: "character varying(100)", unique: "name" })
+    @Property({ columnType: "character varying(100)", unique: true })
     name!: string
 
     @Property({ columnType: "character varying(200)" })

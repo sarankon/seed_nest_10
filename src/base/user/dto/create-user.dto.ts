@@ -1,5 +1,9 @@
 export class CreateUserDto {
-    id?: string
+    // Base
+    id?: number
+
+    // User
+    uuid?: string
     username?: string
     password?: string
 

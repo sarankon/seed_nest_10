@@ -1,4 +1,5 @@
 export class CreateGroupDto {
-    name!: string
+    id?: number
+    name?: string
     description?: string
 }

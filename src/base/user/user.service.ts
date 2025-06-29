@@ -1,22 +1,26 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { EntityManager, MikroORM } from "@mikro-orm/core"
+import { InjectEntityManager, InjectMikroORM } from "@mikro-orm/nestjs"
 
+import { v7 as uuidv7 } from "uuid"
+import * as bcrypt from "bcrypt"
+
+// Entities
 import { BaseUser } from "./entities/user.entity"
+import { BaseRole } from "./entities/role.entity"
+import { BaseGroup } from "./entities/group.entity"
+import { BaseOrganization } from "./entities/organization.entity"
 
-// Basic Service
+// Data Transfer Objects (DTOs)
 import { CreateUserDto } from "./dto/create-user.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { ResponseBody } from "../response-body"
 
-// import { UserLoginDto } from "../auth/dto/login-user.dto"
-import { v4 as uuidv4 } from "uuid"
-import * as bcrypt from "bcrypt"
-
 @Injectable()
 export class UserService {
     constructor(
-        private readonly mikroOrm: MikroORM,
-        private readonly entityManager: EntityManager,
+        @InjectMikroORM("postgreSql") private readonly mikroOrm: MikroORM,
+        @InjectEntityManager("postgreSql") private readonly entityManager: EntityManager,
     ) {}
 
     // Hash Password and Check Password
@@ -40,7 +44,7 @@ export class UserService {
 
         try {
             const entity: BaseUser = new BaseUser()
-            entity.uuid = uuidv4()
+            entity.uuid = uuidv7()
             entity.username = createDto.username
             entity.password = hashPassword
             entity.firstName = createDto.firstName
@@ -120,7 +124,7 @@ export class UserService {
         }
     }
 
-    // Authen Service
+    // For Authentication Service
     async findByUsername(username: string) {
         try {
             const entity = await this.entityManager.findOneOrFail(BaseUser, { username: username }, { populate: ["organization", "roles", "groups"] })
@@ -129,5 +133,78 @@ export class UserService {
             console.error("Error:", err)
             throw new NotFoundException(`Data #username: ${username} Not Found`)
         }
+    }
+
+    // For Initial User
+    async initialUser() {
+        console.log("Initial User ...")
+
+        // Create Default Organization
+        const userOrganization = new BaseOrganization()
+        userOrganization.uuid = uuidv7()
+        userOrganization.name = "Default Organization"
+        userOrganization.description = "Default Organization Description"
+        this.entityManager.persist(userOrganization)
+        await this.entityManager.flush()
+
+        // Create Default Group
+        const userGroup = new BaseGroup()
+        userGroup.uuid = uuidv7()
+        userGroup.name = "Default Group"
+        userGroup.description = "Default Group Description"
+        this.entityManager.persist(userGroup)
+        await this.entityManager.flush()
+
+        // Create Role User
+        const userRole = new BaseRole()
+        userRole.uuid = uuidv7()
+        userRole.name = "user"
+        userRole.description = "Role User"
+        this.entityManager.persist(userRole)
+        await this.entityManager.flush()
+
+        // Create Role Admin
+        const adminRole = new BaseRole()
+        adminRole.uuid = uuidv7()
+        adminRole.name = "admin"
+        adminRole.description = "Role Admin"
+        this.entityManager.persist(adminRole)
+        await this.entityManager.flush()
+
+        // Create User
+        const userEntity = new BaseUser()
+        userEntity.uuid = uuidv7()
+        userEntity.username = "user"
+        userEntity.password = await this.hashPassword("user")
+        userEntity.firstName = "User"
+        userEntity.lastName = "Default"
+        userEntity.email = "user@default.com"
+
+        userEntity.organization = userOrganization
+        userEntity.groups.add(userGroup)
+        userEntity.roles.add(userRole)
+        this.entityManager.persist(userEntity)
+        await this.entityManager.flush()
+
+        // Create Admin
+        const adminEntity = new BaseUser()
+        adminEntity.uuid = uuidv7()
+        adminEntity.username = "admin"
+        adminEntity.password = await this.hashPassword("admin")
+        adminEntity.firstName = "Admin"
+        adminEntity.lastName = "Default"
+        adminEntity.email = "admin@default.com"
+
+        adminEntity.organization = userOrganization
+        adminEntity.groups.add(userGroup)
+        adminEntity.roles.add(adminRole)
+        this.entityManager.persist(adminEntity)
+        await this.entityManager.flush()
+
+        console.log("Initial User Successful :)")
+        return new ResponseBody(200, {
+            user: userEntity,
+            admin: adminEntity,
+        })
     }
 }

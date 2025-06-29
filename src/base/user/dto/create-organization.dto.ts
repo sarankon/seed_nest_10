@@ -1,4 +1,5 @@
 export class CreateOrganizationDto {
-    name!: string
+    uuid?: string
+    name?: string
     description?: string
 }

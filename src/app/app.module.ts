@@ -35,7 +35,6 @@ import serverConfig from "src/config/server.config"
         BaseModule,
 
         // ----- Project Module -----
-        
     ],
     controllers: [AppController],
     providers: [AppService],
