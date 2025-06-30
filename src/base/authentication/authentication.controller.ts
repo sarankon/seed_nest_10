@@ -1,4 +1,4 @@
-import { Controller, Injectable, Logger, Post, Request, UseGuards } from "@nestjs/common"
+import { Controller, Injectable, Ip, Logger, Post, Request, UseGuards } from "@nestjs/common"
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger"
 
 // Service and Guards
@@ -31,7 +31,8 @@ export class AuthenticationController {
     @ApiBody({ type: LoginUserDto })
     @UseGuards(LocalAuthGuard)
     @Post("login")
-    login(@Request() request) {
+    login(@Request() request, @Ip() ip: string) {
+        this.logger.log("User Login Request: " + ip)
         this.logger.log("User Login Request: " + request.user.username)
         this.logger.log("User Login Request: " + request.user.uuid)
 
@@ -43,7 +44,8 @@ export class AuthenticationController {
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @Post("logout")
-    logout(@Request() request) {
+    logout(@Request() request, @Ip() ip: string) {
+        this.logger.log("User Logout Request: " + ip)
         this.logger.log("User Logout Request: " + request.user.username)
         this.logger.log("User Logout Request: " + request.user.uuid)
 
@@ -55,7 +57,8 @@ export class AuthenticationController {
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @Post("refreshToken")
-    refreshToken(@Request() request) {
+    refreshToken(@Request() request, @Ip() ip: string) {
+        this.logger.log("User Refresh Token Request: " + ip)
         this.logger.log("User Refresh Token Request: " + request.user.username)
         this.logger.log("User Refresh Token Request: " + request.user.uuid)
 
@@ -66,7 +69,8 @@ export class AuthenticationController {
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @Post("isAuthenticated")
-    isAuthenticated(@Request() request) {
+    isAuthenticated(@Request() request, @Ip() ip: string) {
+        this.logger.log("Check User Authentication: " + ip)
         this.logger.log("Check User Authentication: " + request.user.username)
         this.logger.log("Check User Authentication: " + request.user.uuid)
 
@@ -76,7 +80,8 @@ export class AuthenticationController {
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @Post("infoUser")
-    infoUser(@Request() request) {
+    infoUser(@Request() request, @Ip() ip: string) {
+        this.logger.log("User Info Request: " + ip)
         this.logger.log("User Info Request: " + request.user.username)
         this.logger.log("User Info Request: " + request.user.uuid)
 
@@ -87,7 +92,8 @@ export class AuthenticationController {
     @UseGuards(JwtAuthGuard)
     @Roles(Role.Admin)
     @Post("infoAdmin")
-    infoAdmin(@Request() request) {
+    infoAdmin(@Request() request, @Ip() ip: string) {
+        this.logger.log("Admin Info Request: " + ip)
         this.logger.log("Admin Info Request: " + request.user.username)
         this.logger.log("Admin Info Request: " + request.user.uuid)
 
