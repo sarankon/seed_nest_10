@@ -13,6 +13,7 @@ import { AppModule } from "./app/app.module"
 import serverConfig from "./config/server.config"
 
 async function bootstrap() {
+    console.log("Server Environment:", serverConfig())
     // const app = await NestFactory.create(AppModule)
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
         logger: ["error", "warn", "log", "debug", "verbose"],
@@ -34,7 +35,7 @@ async function bootstrap() {
         .setTitle("Seed Nest 10 (Example)")
         .setDescription("Seed Nest API Description")
         .setVersion("1.0")
-        .addServer("http://localhost:" + serverConfig().port)
+        .addServer("http://localhost:" + serverConfig().SERVER_PORT)
         .addBasicAuth()
         .addBearerAuth()
         .build()
@@ -62,6 +63,6 @@ async function bootstrap() {
         SwaggerModule.createDocument(app, config, options)
     SwaggerModule.setup("swagger", app, documentFactory)
 
-    await app.listen(process.env.PORT ?? serverConfig().port)
+    await app.listen(process.env.PORT ?? serverConfig().SERVER_PORT)
 }
 bootstrap()

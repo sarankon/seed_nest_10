@@ -1,18 +1,19 @@
 import { Module } from "@nestjs/common"
-import { AppController } from "./app.controller"
-import { AppService } from "./app.service"
-
-// Config
 import { ConfigModule } from "@nestjs/config"
-import reportConfig from "src/config/report.config"
-import databaseConfig from "src/config/database.config"
 
 // Database
 import { MikroOrmModule } from "@mikro-orm/nestjs"
 
-// Base
-import { BaseModule } from "src/base/base.module"
+// Config
+import databaseConfig from "src/config/database.config"
 import serverConfig from "src/config/server.config"
+
+// Controllers and Services
+import { AppController } from "./app.controller"
+import { AppService } from "./app.service"
+
+// Base Module
+import { BaseModule } from "src/base/base.module"
 
 @Module({
     imports: [
@@ -21,8 +22,9 @@ import serverConfig from "src/config/server.config"
             cache: false,
             isGlobal: true,
             expandVariables: true,
-            envFilePath: ["src/environments/local.env"],
-            load: [serverConfig, reportConfig],
+            envFilePath: ["src/environments/development.env"],
+            // envFilePath: ["src/environments/production.env"],
+            load: [serverConfig],
         }),
 
         // ----- Database -----
